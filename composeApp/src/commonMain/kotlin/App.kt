@@ -1,13 +1,11 @@
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import model.RoonerModel
 import ui.EditorPane
 import ui.OutputPane
 import ui.ToolBar
@@ -16,10 +14,12 @@ import ui.ToolBar
 fun App() {
     RoonerTheme {
         Surface(color = MaterialTheme.colors.background) {
+            val model = RoonerModel()
+
             Column {
                 ToolBar()
                 Row {
-                    EditorPane()
+                    EditorPane(model = model)
                     OutputPane()
                 }
             }
@@ -32,7 +32,7 @@ fun RoonerTheme(content: @Composable () -> Unit) {
     val darcula = Color(0xFF1E1F22)
     val colors = darkColors(
         primary = darcula,
-        background = darcula,
+        background = Color.DarkGray,
         surface = darcula,
         error = Color(0xFFB00020), // Error Red
         secondary = Color(0xFF0059FF), // Blue800,
