@@ -21,10 +21,10 @@ fun App() {
             }
 
             Column {
-                ToolBar(model)
+                ToolBar(model = model)
                 Row {
                     EditorPane(model = model)
-                    OutputPane()
+                    OutputPane(model = model)
                 }
             }
         }

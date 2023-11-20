@@ -2,6 +2,7 @@ package di
 
 import controller.Controller
 import controller.RoonerController
+import controller.TestController
 import model.RoonerModel
 
 object AppModule {
@@ -10,6 +11,6 @@ object AppModule {
     }
 
     fun provideController(): Controller {
-        return RoonerController()
+        return TestController()
     }
 }
