@@ -1,7 +1,6 @@
 package model
 
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
 import controller.Controller
@@ -11,10 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import model.RoonerModel.UiEvent.EditCode
 import model.RoonerModel.UiEvent.RunCode
 
@@ -41,7 +37,7 @@ class RoonerModel(
             }
 
             RunCode -> {
-                CoroutineScope(Dispatchers.Default).launch {
+                val runJob = CoroutineScope(Dispatchers.Default).launch {
                     controller.runCode(uiState.value.text.text).collect {
                         _output.value = output.value + it
                     }

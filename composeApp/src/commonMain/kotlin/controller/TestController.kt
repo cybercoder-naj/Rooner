@@ -6,8 +6,11 @@ import kotlinx.coroutines.flow.flow
 
 class TestController : Controller {
     override fun runCode(code: String) = flow {
-        emit(OutputString.StdOut("Running 1!"))
-        delay(2000L)
-        emit(OutputString.StdErr("Running 2!"))
+        for (i in 1..5) {
+            emit(OutputString.StdOut("Running process, stdout output!"))
+            delay(2000L)
+            emit(OutputString.StdErr("Running process, stderr output!"))
+            delay(2000L)
+        }
     }
 }
