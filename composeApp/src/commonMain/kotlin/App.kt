@@ -1,39 +1,50 @@
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.Surface
+import androidx.compose.material.darkColors
+import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
+import androidx.compose.ui.graphics.Color
+import ui.EditorPane
+import ui.OutputPane
+import ui.ToolBar
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
-    MaterialTheme {
-        var greetingText by remember { mutableStateOf("Hello World!") }
-        var showImage by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = {
-                greetingText = "Compose: ${Greeting().greet()}"
-                showImage = !showImage
-            }) {
-                Text(greetingText)
-            }
-            AnimatedVisibility(showImage) {
-                Image(
-                    painterResource("compose-multiplatform.xml"),
-                    null
-                )
+    RoonerTheme {
+        Surface(color = MaterialTheme.colors.background) {
+            Column {
+                ToolBar()
+                Row {
+                    EditorPane()
+                    OutputPane()
+                }
             }
         }
     }
+}
+
+@Composable
+fun RoonerTheme(content: @Composable () -> Unit) {
+    val darcula = Color(0xFF1E1F22)
+    val colors = darkColors(
+        primary = darcula,
+        background = darcula,
+        surface = darcula,
+        error = Color(0xFFB00020), // Error Red
+        secondary = Color(0xFF0059FF), // Blue800,
+        onPrimary = Color.White,
+        onSecondary = Color.White,
+        onBackground = Color.White,
+        onSurface = Color.White,
+        onError = Color.White
+    )
+
+    MaterialTheme(
+        colors = colors,
+        content = content,
+    )
 }

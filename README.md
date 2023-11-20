@@ -1,3 +1,10 @@
+# Rooner
+
+This application is written in [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform)
+intended for Android and desktop applications. 
+
+## About the Project
+
 This is a Kotlin Multiplatform project targeting Android, Desktop, Server.
 
 * `/server` is for the Ktor server application.
