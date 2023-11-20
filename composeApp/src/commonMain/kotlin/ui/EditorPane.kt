@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import model.RoonerModel
-import model.RoonerModel.UiEvent.EditorTextChange
+import model.RoonerModel.UiEvent.EditCode
 import ui.components.Pane
 
 @Composable
@@ -68,7 +68,7 @@ fun EditorPane(model: RoonerModel) {
             CompositionLocalProvider(LocalTextSelectionColors provides selectionColours) {
                 BasicTextField(
                     value = state.text,
-                    onValueChange = { model.action(EditorTextChange(it)) },
+                    onValueChange = { model.action(EditCode(it)) },
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.surface)

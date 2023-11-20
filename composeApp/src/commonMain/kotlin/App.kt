@@ -5,6 +5,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import controller.RoonerController
+import di.AppModule
 import model.RoonerModel
 import ui.EditorPane
 import ui.OutputPane
@@ -14,10 +16,12 @@ import ui.ToolBar
 fun App() {
     RoonerTheme {
         Surface(color = MaterialTheme.colors.background) {
-            val model = RoonerModel()
+            val model = with(AppModule.provideController()) {
+                AppModule.provideViewModel(this)
+            }
 
             Column {
-                ToolBar()
+                ToolBar(model)
                 Row {
                     EditorPane(model = model)
                     OutputPane()

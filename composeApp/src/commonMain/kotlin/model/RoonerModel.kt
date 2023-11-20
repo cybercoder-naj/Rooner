@@ -3,22 +3,31 @@ package model
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
+import controller.Controller
 import controller.models.ExitStatus
-import model.RoonerModel.UiEvent.*
+import model.RoonerModel.UiEvent.EditCode
+import model.RoonerModel.UiEvent.RunCode
 
-class RoonerModel {
+class RoonerModel(
+    val controller: Controller
+) {
     private val _uiState = mutableStateOf(UiState())
     val uiState: State<UiState>
         get() = _uiState
 
     sealed class UiEvent {
-        data class EditorTextChange(val newText: TextFieldValue) : UiEvent()
+        data class EditCode(val newText: TextFieldValue) : UiEvent()
+        data object RunCode : UiEvent()
     }
 
     fun action(event: UiEvent) {
         when (event) {
-            is EditorTextChange -> {
+            is EditCode -> {
                 _uiState.value = uiState.value.copy(text = event.newText)
+            }
+
+            RunCode -> {
+                controller.runCode(uiState.value.text.text)
             }
         }
     }
@@ -26,6 +35,6 @@ class RoonerModel {
 
 data class UiState(
     var text: TextFieldValue = TextFieldValue(""),
-    var code: ExitStatus = ExitStatus.None,
+    var exitStatus: ExitStatus = ExitStatus.None,
     var isRunning: Boolean = false
 )
