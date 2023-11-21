@@ -1,9 +1,6 @@
 package ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,9 +9,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import controller.models.OutputString
+import controller.models.ProcessOutput
 import model.RoonerModel
 import ui.components.Pane
 
@@ -29,14 +25,34 @@ fun OutputPane(model: RoonerModel) {
             modifier = Modifier.padding(top = 12.dp, start = 8.dp)
         ) {
             items(output.value) {
-                Text(
-                    text = it.message,
-                    color = when(it) {
-                        is OutputString.StdOut -> MaterialTheme.colors.onBackground
-                        is OutputString.StdErr -> MaterialTheme.colors.error
-                    }
-                )
+                when (it) {
+                    is ProcessOutput.Complete -> ErrorText(
+                        text = "IDE Error occurred: ProcessOutput.Complete found in RoonerModel.output"
+                    )
+                    is ProcessOutput.ErrorString -> ErrorText(
+                        text = it.message
+                    )
+                    is ProcessOutput.OutputString -> StandardText(
+                        text = it.message
+                    )
+                }
             }
         }
     }
+}
+
+@Composable
+fun StandardText(text: String) {
+    Text(
+        text = text,
+        color = MaterialTheme.colors.onBackground
+    )
+}
+
+@Composable
+fun ErrorText(text: String) {
+    Text(
+        text = text,
+        color = MaterialTheme.colors.error
+    )
 }
