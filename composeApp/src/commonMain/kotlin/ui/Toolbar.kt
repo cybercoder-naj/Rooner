@@ -1,13 +1,26 @@
 package ui
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -15,20 +28,38 @@ import controller.models.ProcessStatus
 import model.RoonerModel
 import model.RoonerModel.UiEvent.RunCode
 import model.RoonerModel.UiEvent.StopCode
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
 
 private const val PLAY_ICON = "\uf04b"
 private const val STOP_ICON = "\uf04d"
 
+@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ToolBar(model: RoonerModel) {
     val isProcessRunning = model.uiState.value.runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 8.dp),
-        horizontalArrangement = Arrangement.End
+            .padding(top = 8.dp, bottom = 8.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         if (isProcessRunning) {
+            val anim = remember { Animatable(0f) }
+            LaunchedEffect(true) {
+                anim.animateTo(
+                    targetValue = 360f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(
+                            durationMillis = 1000,
+                            easing = LinearEasing
+                        ),
+                        repeatMode = RepeatMode.Restart
+                    )
+                )
+            }
+
             IconButton(
                 onClick = { model.action(StopCode) },
             ) {
@@ -38,6 +69,12 @@ fun ToolBar(model: RoonerModel) {
                     fontSize = 24.sp,
                 )
             }
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                painterResource("running.png"),
+                null,
+                modifier = Modifier.size(32.dp).rotate(anim.value)
+            )
         } else {
             IconButton(
                 onClick = { model.action(RunCode) }
@@ -51,3 +88,4 @@ fun ToolBar(model: RoonerModel) {
         }
     }
 }
+
