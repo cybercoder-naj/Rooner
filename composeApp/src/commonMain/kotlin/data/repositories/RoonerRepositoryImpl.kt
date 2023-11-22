@@ -13,6 +13,10 @@ import java.nio.file.Paths
 import java.util.Scanner
 import java.util.concurrent.TimeUnit
 
+/*
+ * TODO this class is coupled with the details of files and processes.
+ *      which makes it difficult to test. Need to abstract this away.
+ */
 class RoonerRepositoryImpl(
     private val executable: Executable
 ) : RoonerRepository {
