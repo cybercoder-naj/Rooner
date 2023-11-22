@@ -1,4 +1,4 @@
-package ui
+package ui.screen
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -33,6 +33,7 @@ import domain.models.ProcessStatus
 import di.AppContainer
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
+import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.*
 
 private const val PLAY_ICON = "\uf04b"

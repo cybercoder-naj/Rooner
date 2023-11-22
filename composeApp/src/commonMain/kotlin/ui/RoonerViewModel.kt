@@ -43,9 +43,15 @@ class RoonerViewModel(
             }
 
             RunCode -> {
-                _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
                 if (uiState.value.autoClear)
                     _output.value = emptyList()
+
+                if (uiState.value.text.text.isBlank()) {
+                    val errStr = ProcessOutput.ErrorString("There is nothing to run!")
+                    _output.value = output.value + errStr
+                }
+
+                _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
 
                 runJob = CoroutineScope(Dispatchers.Default).launch {
                     repository.runCode(uiState.value.text.text).collect {

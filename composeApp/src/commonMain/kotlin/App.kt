@@ -5,9 +5,9 @@ import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import ui.EditorPane
-import ui.OutputPane
-import ui.ToolBar
+import ui.screen.EditorPane
+import ui.screen.OutputPane
+import ui.screen.ToolBar
 
 @Composable
 fun App() {

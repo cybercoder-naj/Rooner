@@ -1,8 +1,8 @@
 package domain.models
 
-sealed class ProcessStatus(val status: Int? = null) {
+sealed class ProcessStatus {
     data object Inactive : ProcessStatus()
     data object Active : ProcessStatus()
-    class Done(status: Int) : ProcessStatus(status)
+    data class Done(val status: Int) : ProcessStatus()
 
 }

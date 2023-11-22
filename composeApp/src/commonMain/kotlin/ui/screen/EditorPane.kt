@@ -1,4 +1,4 @@
-package ui
+package ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import di.AppContainer
+import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.components.Pane
 
