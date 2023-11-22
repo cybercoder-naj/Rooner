@@ -2,20 +2,20 @@ package data.repositories
 
 import data.executables.KotlinExecutable
 import data.models.ProcessOutput
-import domain.FileIO
+import domain.CodeRunner
 import domain.RoonerRepository
 import kotlinx.coroutines.flow.flow
-import java.io.File
 
 class RoonerRepositoryImpl : RoonerRepository {
     override fun runCode(code: String) = flow {
         val executable = KotlinExecutable()
-        val fileIo = FileIO(executable)
 
-        emit(ProcessOutput.OutputString("Writing to file"))
-        fileIo.writeToFile(code)
+        val codeRunner = CodeRunner(executable)
         emit(ProcessOutput.OutputString("Executing code. . .\n"))
-        emit(ProcessOutput.OutputString("Executing code. . .\n"))
+
+        codeRunner.executeCode(
+            code = code,
+        ).collect(::emit)
 
         emit(ProcessOutput.Complete(0))
     }

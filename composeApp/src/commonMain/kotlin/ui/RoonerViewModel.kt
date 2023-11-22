@@ -43,7 +43,7 @@ class RoonerViewModel(
 
             RunCode -> {
                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
-                runJob = CoroutineScope(Dispatchers.Default).launch {
+                runJob = CoroutineScope(Dispatchers.IO).launch {
                     repository.runCode(uiState.value.text.text).collect {
                         when (it) {
                             is ProcessOutput.Complete ->
