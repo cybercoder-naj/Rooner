@@ -1,15 +1,15 @@
 package di
 
 import data.executables.KotlinExecutable
-import data.repositories.RoonerRepositoryImpl
+import data.repositories.CodeRunnerRepositoryImpl
 import domain.executables.Executable
-import domain.repositories.RoonerRepository
+import domain.repositories.CodeRunnerRepository
 import ui.RoonerViewModel
 
 object AppContainer {
     val executable: Executable = KotlinExecutable()
 
-    val repository: RoonerRepository = RoonerRepositoryImpl(executable)
+    val repository: CodeRunnerRepository = CodeRunnerRepositoryImpl(executable)
 
     val viewModel: RoonerViewModel = RoonerViewModel(repository)
 }

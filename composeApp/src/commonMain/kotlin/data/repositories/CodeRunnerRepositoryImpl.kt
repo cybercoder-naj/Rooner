@@ -2,7 +2,7 @@ package data.repositories
 
 import domain.executables.Executable
 import domain.models.ProcessOutput
-import domain.repositories.RoonerRepository
+import domain.repositories.CodeRunnerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -17,9 +17,9 @@ import java.util.concurrent.TimeUnit
  * TODO this class is coupled with the details of files and processes.
  *      which makes it difficult to test. Need to abstract this away.
  */
-class RoonerRepositoryImpl(
+class CodeRunnerRepositoryImpl(
     private val executable: Executable
-) : RoonerRepository {
+) : CodeRunnerRepository {
     override fun runCode(code: String) = flow {
         emit(ProcessOutput.OutputString("Uploading the script. . ."))
         val path = Paths.get(System.getenv("HOME"), ".cache")

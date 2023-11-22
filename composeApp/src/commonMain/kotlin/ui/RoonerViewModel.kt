@@ -3,7 +3,7 @@ package ui
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
-import domain.repositories.RoonerRepository
+import domain.repositories.CodeRunnerRepository
 import domain.models.ProcessStatus
 import domain.models.ProcessOutput
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,7 @@ import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
 
 class RoonerViewModel(
-    private val repository: RoonerRepository
+    private val repository: CodeRunnerRepository
 ) {
     // TODO merge uiState into stateflow
     private val _uiState = mutableStateOf(UiState())
