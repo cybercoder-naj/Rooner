@@ -1,6 +1,6 @@
-package domain.executables
+package domain
 
-interface Executable {
+interface LanguageSetting {
     val name: String
     val fileExtension: String
     val executionCommand: List<String>

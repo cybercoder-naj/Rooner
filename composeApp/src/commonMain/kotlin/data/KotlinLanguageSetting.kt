@@ -1,8 +1,8 @@
-package data.executables
+package data
 
-import domain.executables.Executable
+import domain.LanguageSetting
 
-class KotlinExecutable : Executable {
+class KotlinLanguageSetting : LanguageSetting {
     override val name: String
         get() = "Kotlin"
     override val fileExtension: String
