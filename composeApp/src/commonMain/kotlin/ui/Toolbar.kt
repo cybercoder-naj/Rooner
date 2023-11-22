@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import controller.models.ProcessStatus
+import di.AppContainer
 import model.RoonerModel
 import model.RoonerModel.UiEvent.RunCode
 import model.RoonerModel.UiEvent.StopCode
@@ -36,7 +37,7 @@ private const val STOP_ICON = "\uf04d"
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ToolBar(model: RoonerModel) {
+fun ToolBar(model: RoonerModel = AppContainer.model) {
     val isProcessRunning = model.uiState.value.runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier
@@ -70,6 +71,7 @@ fun ToolBar(model: RoonerModel) {
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
+            // TODO maybe use a constraint layout instead of hardcoding 32.dp
             Icon(
                 painterResource("running.png"),
                 null,

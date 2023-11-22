@@ -11,11 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import controller.models.ProcessOutput
+import di.AppContainer
 import model.RoonerModel
 import ui.components.Pane
 
 @Composable
-fun OutputPane(model: RoonerModel) {
+fun OutputPane(model: RoonerModel = AppContainer.model) {
     val output = model.output.collectAsState()
     Pane(
         title = "Output",

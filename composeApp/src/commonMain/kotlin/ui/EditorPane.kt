@@ -22,12 +22,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import di.AppContainer
 import model.RoonerModel
 import model.RoonerModel.UiEvent.EditCode
 import ui.components.Pane
 
 @Composable
-fun EditorPane(model: RoonerModel) {
+fun EditorPane(model: RoonerModel = AppContainer.model) {
     val state = model.uiState.value
     val editorFontSize = 16.sp
     val editorLineHeight = 1.em
