@@ -1,4 +1,4 @@
-package data.models
+package domain.models
 
 sealed class ProcessStatus(val status: Int? = null) {
     data object Inactive : ProcessStatus()

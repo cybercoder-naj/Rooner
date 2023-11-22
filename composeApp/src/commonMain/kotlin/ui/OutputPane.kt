@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import data.models.ProcessOutput
+import domain.models.ProcessOutput
 import di.AppContainer
 import ui.components.Pane
 

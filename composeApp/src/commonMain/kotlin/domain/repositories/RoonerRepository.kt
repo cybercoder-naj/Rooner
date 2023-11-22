@@ -1,6 +1,6 @@
-package domain
+package domain.repositories
 
-import data.models.ProcessOutput
+import domain.models.ProcessOutput
 import kotlinx.coroutines.flow.Flow
 
 interface RoonerRepository {

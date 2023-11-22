@@ -1,8 +1,7 @@
 package di
 
 import data.repositories.RoonerRepositoryImpl
-import domain.RoonerRepository
-import data.repositories.TestRepository
+import domain.repositories.RoonerRepository
 import ui.RoonerViewModel
 
 object AppContainer {

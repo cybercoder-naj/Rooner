@@ -1,6 +1,6 @@
 package data.executables
 
-import domain.Executable
+import domain.executables.Executable
 
 class KotlinExecutable : Executable {
     override val name: String

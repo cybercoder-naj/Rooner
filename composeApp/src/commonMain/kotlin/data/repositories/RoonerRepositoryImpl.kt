@@ -1,9 +1,9 @@
 package data.repositories
 
 import data.executables.KotlinExecutable
-import data.models.ProcessOutput
+import domain.models.ProcessOutput
 import domain.CodeRunner
-import domain.RoonerRepository
+import domain.repositories.RoonerRepository
 import kotlinx.coroutines.flow.flow
 
 class RoonerRepositoryImpl : RoonerRepository {
@@ -11,7 +11,7 @@ class RoonerRepositoryImpl : RoonerRepository {
         val executable = KotlinExecutable()
 
         val codeRunner = CodeRunner(executable)
-        emit(ProcessOutput.OutputString("Executing code. . .\n"))
+        emit(ProcessOutput.OutputString("Building kotlin script. . .\n"))
 
         codeRunner.executeCode(
             code = code,

@@ -1,7 +1,7 @@
 package data.repositories
 
-import data.models.ProcessOutput
-import domain.RoonerRepository
+import domain.models.ProcessOutput
+import domain.repositories.RoonerRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 

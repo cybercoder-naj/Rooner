@@ -1,11 +1,10 @@
 package domain
 
-import data.models.ProcessOutput
+import domain.executables.Executable
+import domain.models.ProcessOutput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
-import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
 import java.nio.file.Paths

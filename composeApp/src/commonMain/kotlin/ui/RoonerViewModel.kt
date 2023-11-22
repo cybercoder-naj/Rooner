@@ -3,9 +3,9 @@ package ui
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
-import domain.RoonerRepository
-import data.models.ProcessStatus
-import data.models.ProcessOutput
+import domain.repositories.RoonerRepository
+import domain.models.ProcessStatus
+import domain.models.ProcessOutput
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -33,6 +33,7 @@ class RoonerViewModel(
         data class EditCode(val newText: TextFieldValue) : UiEvent()
         data object RunCode : UiEvent()
         data object StopCode : UiEvent()
+        data object ToggleAutoClear : UiEvent()
     }
 
     fun action(event: UiEvent) {
@@ -43,7 +44,10 @@ class RoonerViewModel(
 
             RunCode -> {
                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
-                runJob = CoroutineScope(Dispatchers.IO).launch {
+                if (uiState.value.autoClear)
+                    _output.value = emptyList()
+
+                runJob = CoroutineScope(Dispatchers.Default).launch {
                     repository.runCode(uiState.value.text.text).collect {
                         when (it) {
                             is ProcessOutput.Complete ->
@@ -60,11 +64,16 @@ class RoonerViewModel(
                 // TODO use constant instead of magic number 130
                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Done(130))
             }
+
+            UiEvent.ToggleAutoClear -> {
+                _uiState.value = uiState.value.copy(autoClear = !uiState.value.autoClear)
+            }
         }
     }
-}
 
-data class UiState(
-    var text: TextFieldValue = TextFieldValue(""),
-    var runningStatus: ProcessStatus = ProcessStatus.Inactive,
-)
+    data class UiState(
+        var text: TextFieldValue = TextFieldValue(""),
+        var runningStatus: ProcessStatus = ProcessStatus.Inactive,
+        var autoClear: Boolean = false
+    )
+}

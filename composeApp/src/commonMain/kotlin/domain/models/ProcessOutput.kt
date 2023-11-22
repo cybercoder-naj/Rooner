@@ -1,4 +1,4 @@
-package data.models
+package domain.models
 
 sealed class ProcessOutput {
     data class OutputString(val message: String): ProcessOutput()

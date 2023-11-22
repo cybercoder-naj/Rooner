@@ -1,4 +1,4 @@
-package domain
+package domain.executables
 
 interface Executable {
     val name: String
