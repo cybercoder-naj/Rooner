@@ -1,22 +1,22 @@
-package model
+package ui
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.input.TextFieldValue
-import controller.Controller
-import controller.models.ProcessStatus
-import controller.models.ProcessOutput
+import domain.RoonerRepository
+import data.models.ProcessStatus
+import data.models.ProcessOutput
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import model.RoonerModel.UiEvent.EditCode
-import model.RoonerModel.UiEvent.RunCode
+import ui.RoonerViewModel.UiEvent.EditCode
+import ui.RoonerViewModel.UiEvent.RunCode
 
-class RoonerModel(
-    private val controller: Controller
+class RoonerViewModel(
+    private val repository: RoonerRepository
 ) {
     // TODO merge uiState into stateflow
     private val _uiState = mutableStateOf(UiState())
@@ -44,7 +44,7 @@ class RoonerModel(
             RunCode -> {
                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
                 runJob = CoroutineScope(Dispatchers.Default).launch {
-                    controller.runCode(uiState.value.text.text).collect {
+                    repository.runCode(uiState.value.text.text).collect {
                         when (it) {
                             is ProcessOutput.Complete ->
                                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Done(it.status))

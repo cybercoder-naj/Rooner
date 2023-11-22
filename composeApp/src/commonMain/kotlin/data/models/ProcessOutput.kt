@@ -1,4 +1,4 @@
-package controller.models
+package data.models
 
 sealed class ProcessOutput {
     data class OutputString(val message: String): ProcessOutput()

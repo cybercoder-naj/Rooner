@@ -1,10 +1,11 @@
-package controller
+package data.repositories
 
-import controller.models.ProcessOutput
+import data.models.ProcessOutput
+import domain.RoonerRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 
-class TestController : Controller {
+class TestRepository : RoonerRepository {
     override fun runCode(code: String) = flow {
         for (i in 1..3) {
             emit(ProcessOutput.OutputString("Running process, stdout output!"))

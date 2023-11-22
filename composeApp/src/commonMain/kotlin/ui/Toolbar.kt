@@ -24,11 +24,10 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import controller.models.ProcessStatus
+import data.models.ProcessStatus
 import di.AppContainer
-import model.RoonerModel
-import model.RoonerModel.UiEvent.RunCode
-import model.RoonerModel.UiEvent.StopCode
+import ui.RoonerViewModel.UiEvent.RunCode
+import ui.RoonerViewModel.UiEvent.StopCode
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -37,8 +36,8 @@ private const val STOP_ICON = "\uf04d"
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ToolBar(model: RoonerModel = AppContainer.model) {
-    val isProcessRunning = model.uiState.value.runningStatus is ProcessStatus.Active
+fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
+    val isProcessRunning = viewModel.uiState.value.runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -62,7 +61,7 @@ fun ToolBar(model: RoonerModel = AppContainer.model) {
             }
 
             IconButton(
-                onClick = { model.action(StopCode) },
+                onClick = { viewModel.action(StopCode) },
             ) {
                 Text(
                     text = STOP_ICON,
@@ -79,7 +78,7 @@ fun ToolBar(model: RoonerModel = AppContainer.model) {
             )
         } else {
             IconButton(
-                onClick = { model.action(RunCode) }
+                onClick = { viewModel.action(RunCode) }
             ) {
                 Text(
                     text = PLAY_ICON,

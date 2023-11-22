@@ -1,11 +1,12 @@
 package di
 
-import controller.Controller
-import controller.TestController
-import model.RoonerModel
+import data.repositories.RoonerRepositoryImpl
+import domain.RoonerRepository
+import data.repositories.TestRepository
+import ui.RoonerViewModel
 
 object AppContainer {
-    val controller: Controller = TestController()
+    val repository: RoonerRepository = RoonerRepositoryImpl()
 
-    val model: RoonerModel = RoonerModel(controller)
+    val viewModel: RoonerViewModel = RoonerViewModel(repository)
 }

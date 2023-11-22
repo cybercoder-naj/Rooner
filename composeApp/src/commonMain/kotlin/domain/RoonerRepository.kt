@@ -1,8 +1,8 @@
-package controller
+package domain
 
-import controller.models.ProcessOutput
+import data.models.ProcessOutput
 import kotlinx.coroutines.flow.Flow
 
-interface Controller {
+interface RoonerRepository {
     fun runCode(code: String): Flow<ProcessOutput>
 }

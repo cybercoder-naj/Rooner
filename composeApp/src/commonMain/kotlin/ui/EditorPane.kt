@@ -23,13 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import di.AppContainer
-import model.RoonerModel
-import model.RoonerModel.UiEvent.EditCode
+import ui.RoonerViewModel.UiEvent.EditCode
 import ui.components.Pane
 
 @Composable
-fun EditorPane(model: RoonerModel = AppContainer.model) {
-    val state = model.uiState.value
+fun EditorPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
+    val state = viewModel.uiState.value
     val editorFontSize = 16.sp
     val editorLineHeight = 1.em
     val editorPaddingTop = 12.dp
@@ -69,7 +68,7 @@ fun EditorPane(model: RoonerModel = AppContainer.model) {
             CompositionLocalProvider(LocalTextSelectionColors provides selectionColours) {
                 BasicTextField(
                     value = state.text,
-                    onValueChange = { model.action(EditCode(it)) },
+                    onValueChange = { viewModel.action(EditCode(it)) },
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.surface)
