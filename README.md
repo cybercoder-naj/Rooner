@@ -54,3 +54,15 @@ Start the server
 
  - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
  - Output having multiple lines is not scrollable.
+
+## Authors
+
+ - [@cybercoder-naj](https://www.github.com/cybercoder-naj)
+
+## Acknowledgements
+
+ - [Getting Started with Compose Multiplatform | Jetbrains](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-getting-started.html#next-step)
+ - [Java ProcessBuilder API | Baeldung](https://www.baeldung.com/java-lang-processbuilder-api)
+ - [Icons | FontAwesome](https://fontawesome.com/icons)
+ - [Process Exit Values | Baeldung](https://www.baeldung.com/linux/status-codes)
+
