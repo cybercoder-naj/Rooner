@@ -37,6 +37,9 @@ kotlin {
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
         }
+        commonTest.dependencies {
+            implementation(libs.junit)
+        }
     }
 }
 

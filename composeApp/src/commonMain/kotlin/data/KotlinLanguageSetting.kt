@@ -1,5 +1,6 @@
 package data
 
+import androidx.compose.ui.graphics.Color
 import domain.LanguageSetting
 
 class KotlinLanguageSetting : LanguageSetting {
@@ -9,4 +10,37 @@ class KotlinLanguageSetting : LanguageSetting {
         get() = "kts"
     override val executionCommand: List<String>
         get() = "kotlinc -script".split(" ")
+    override val keywords: Map<String, Color>
+        get() = listOf(
+            "as",
+            "as?",
+            "break",
+            "class",
+            "continue",
+            "do",
+            "else",
+            "false",
+            "for",
+            "fun",
+            "if",
+            "in",
+            "!in",
+            "is",
+            "!is",
+            "null",
+            "object",
+            "package",
+            "return",
+            "super",
+            "this",
+            "throw",
+            "true",
+            "typealias",
+            "typeof",
+            "val",
+            "var",
+            "when",
+            "while"
+        ).associateWith { Color(0xFFFFF800) }
+
 }

@@ -11,5 +11,5 @@ object AppContainer {
 
     val repository: CodeRunnerRepository = CodeRunnerRepositoryImpl(languageSetting)
 
-    val viewModel: RoonerViewModel = RoonerViewModel(repository)
+    val viewModel: RoonerViewModel = RoonerViewModel(repository, languageSetting)
 }
