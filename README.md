@@ -1,23 +1,47 @@
 # Rooner
 
+A Basic code editor that executes any Kotlin script. 
 This application is written in [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform)
-intended for Android and desktop applications. 
+intended for desktop applications. 
 
-## About the Project
+## Installation
 
-This is a Kotlin Multiplatform project targeting Android, Desktop, Server.
+### Prerequities
 
-* `/server` is for the Ktor server application.
+You need to have the following installed
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here too.
+ 1. [Android Studio](https://developer.android.com/studio/install)
+ 2. [Kotlin Compiler](https://kotlinlang.org/docs/command-line.html#sdkman)
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+**Note**: The current version of this build only runs on Linux.
 
+### Run locally
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+Clone the project
+
+```bash
+  git clone https://www.github.com/cybercoder-naj/Rooner.git
+```
+
+Go to the project directory
+
+```bash
+  cd Rooner
+```
+
+Start the server
+
+```bash
+  ./gradlw :composeApp:run
+```
+
+## Roadmap
+
+- [x] Structural UI
+- [x] Code execution
+- [x] Pipe output of code execution
+- [x] Show errors in compilation/runtime
+- [x] Indicators of current state
+- [x] Syntax Highlighting
+- [ ] Clickable links on error messages
+- [ ] ETA of code execution
