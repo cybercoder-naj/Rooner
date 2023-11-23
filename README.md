@@ -4,6 +4,10 @@ A Basic code editor that executes any Kotlin script.
 This application is written in [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform)
 intended for desktop applications. 
 
+## Screenshots and Demo
+
+**_Coming soon!_**
+
 ## Installation
 
 ### Prerequities
@@ -45,3 +49,8 @@ Start the server
 - [x] Syntax Highlighting
 - [ ] Clickable links on error messages
 - [ ] ETA of code execution
+
+## Known Issues
+
+ - Entering tab on the editor makes rectangular squares. Advised to use spaces instead.
+ - Output having multiple lines is not scrollable.
