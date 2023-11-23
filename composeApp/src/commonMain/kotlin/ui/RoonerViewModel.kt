@@ -2,9 +2,13 @@ package ui
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.withStyle
 import domain.LanguageSetting
 import domain.repositories.CodeRunnerRepository
 import domain.models.ProcessStatus
@@ -18,6 +22,7 @@ import kotlinx.coroutines.launch
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
 import utils.highlight
+import java.lang.IllegalStateException
 
 class RoonerViewModel(
     private val repository: CodeRunnerRepository,
@@ -27,8 +32,8 @@ class RoonerViewModel(
     val uiState: State<UiState>
         get() = _uiState
 
-    private val _output = MutableStateFlow(emptyList<ProcessOutput>())
-    val output: StateFlow<List<ProcessOutput>>
+    private val _output = MutableStateFlow(buildAnnotatedString {  })
+    val output: StateFlow<AnnotatedString>
         get() = _output
 
     private var runJob: Job? = null
@@ -52,11 +57,11 @@ class RoonerViewModel(
 
             RunCode -> {
                 if (uiState.value.autoClear)
-                    _output.value = emptyList()
+                    _output.value = buildAnnotatedString {  }
 
                 if (uiState.value.text.text.isBlank()) {
                     val errStr = ProcessOutput.ErrorString("There is nothing to run!")
-                    _output.value = output.value + errStr
+                    addToOutput(errStr)
                 }
 
                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
@@ -66,8 +71,7 @@ class RoonerViewModel(
                         when (it) {
                             is ProcessOutput.Complete ->
                                 _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Done(it.status))
-                            else ->
-                                _output.value = output.value + it
+                            else -> addToOutput(it)
                         }
                     }
                 }
@@ -83,6 +87,32 @@ class RoonerViewModel(
                 _uiState.value = uiState.value.copy(autoClear = !uiState.value.autoClear)
             }
         }
+    }
+
+    private fun addToOutput(output: ProcessOutput) {
+        assert(output !is ProcessOutput.Complete)
+
+        val transformed = buildAnnotatedString {
+            when (output) {
+                is ProcessOutput.OutputString -> appendLine(output.message)
+                is ProcessOutput.ErrorString ->
+                    withStyle(style = SpanStyle(color = Color.Red)) {
+                        appendLine(makeClickable(output.message))
+                    }
+                else -> throw IllegalStateException("Assertion failed")
+            }
+        }
+
+        _output.value = this.output.value + transformed
+    }
+
+    private fun makeClickable(string: String): AnnotatedString {
+        val match = Regex("${languageSetting.filename}:(\\(\\d+:\\d+\\))")
+            .findAll(string)
+            .forEach {
+                it.groupValues.also(::println)
+            }
+        return buildAnnotatedString { append(string) }
     }
 
     data class UiState(

@@ -81,44 +81,9 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(start = 12.dp, top = 12.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 12.dp, start = 8.dp)
-            ) {
-                items(output.value) {
-                    when (it) {
-                        is ProcessOutput.Complete -> ErrorText(
-                            text = "IDE Error occurred: ProcessOutput.Complete found in RoonerModel.output"
-                        )
-
-                        is ProcessOutput.ErrorString -> ErrorText(
-                            text = it.message
-                        )
-
-                        is ProcessOutput.OutputString -> StandardText(
-                            text = it.message
-                        )
-                    }
-                }
-            }
+            Text(text = output.value)
         }
     }
-}
-
-@Composable
-fun StandardText(text: String) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.onBackground
-    )
-}
-
-@Composable
-fun ErrorText(text: String) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.error
-    )
 }

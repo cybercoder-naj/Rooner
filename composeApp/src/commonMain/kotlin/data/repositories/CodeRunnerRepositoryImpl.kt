@@ -23,7 +23,7 @@ class CodeRunnerRepositoryImpl(
     override fun runCode(code: String) = flow {
         emit(ProcessOutput.OutputString("Uploading the script. . ."))
         val path = Paths.get(System.getenv("HOME"), ".cache")
-        val file = File(path.toString(), "script.${languageSetting.fileExtension}")
+        val file = File(path.toString(), languageSetting.filename)
         try {
             if (!file.exists())
                 file.createNewFile()
