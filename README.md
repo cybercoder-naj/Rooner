@@ -15,7 +15,7 @@ intended for desktop applications.
 You need to have the following installed
 
  1. [Android Studio](https://developer.android.com/studio/install) ~> IDE for code editing
- 2. [Kotlin Compiler](https://kotlinlang.org/docs/command-line.html#sdkman) ~> Tool required by the software 
+ 2. [Kotlin Compiler](https://kotlinlang.org/docs/command-line.html#sdkman) ~> Tool required by Rooner
 
 **Note**: The current version of this build only runs on Linux.
 
