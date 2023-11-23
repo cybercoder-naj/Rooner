@@ -52,5 +52,5 @@ Start the server
 
 ## Known Issues
 
- - Entering tab on the editor makes rectangular squares. Advised to use spaces instead.
+ - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
  - Output having multiple lines is not scrollable.
