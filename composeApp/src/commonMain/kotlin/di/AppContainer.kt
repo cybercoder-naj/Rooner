@@ -1,15 +1,15 @@
 package di
 
-import data.executables.KotlinExecutable
+import data.KotlinLanguageSetting
 import data.repositories.CodeRunnerRepositoryImpl
-import domain.executables.Executable
+import domain.LanguageSetting
 import domain.repositories.CodeRunnerRepository
 import ui.RoonerViewModel
 
 object AppContainer {
-    val executable: Executable = KotlinExecutable()
+    val languageSetting: LanguageSetting = KotlinLanguageSetting()
 
-    val repository: CodeRunnerRepository = CodeRunnerRepositoryImpl(executable)
+    val repository: CodeRunnerRepository = CodeRunnerRepositoryImpl(languageSetting)
 
-    val viewModel: RoonerViewModel = RoonerViewModel(repository)
+    val viewModel: RoonerViewModel = RoonerViewModel(repository, languageSetting)
 }

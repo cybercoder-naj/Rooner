@@ -2,7 +2,10 @@ package ui
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import domain.LanguageSetting
 import domain.repositories.CodeRunnerRepository
 import domain.models.ProcessStatus
 import domain.models.ProcessOutput
@@ -14,11 +17,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
+import utils.highlight
 
 class RoonerViewModel(
-    private val repository: CodeRunnerRepository
+    private val repository: CodeRunnerRepository,
+    private val languageSetting: LanguageSetting
 ) {
-    // TODO merge uiState into stateflow
     private val _uiState = mutableStateOf(UiState())
     val uiState: State<UiState>
         get() = _uiState
@@ -39,7 +43,11 @@ class RoonerViewModel(
     fun action(event: UiEvent) {
         when (event) {
             is EditCode -> {
-                _uiState.value = uiState.value.copy(text = event.newText)
+                _uiState.value = uiState.value.copy(
+                    text = event.newText.copy(
+                        annotatedString = highlight(event.newText.text, languageSetting)
+                    )
+                )
             }
 
             RunCode -> {
@@ -78,7 +86,7 @@ class RoonerViewModel(
     }
 
     data class UiState(
-        var text: TextFieldValue = TextFieldValue(""),
+        var text: TextFieldValue = TextFieldValue(buildAnnotatedString {}),
         var runningStatus: ProcessStatus = ProcessStatus.Inactive,
         var autoClear: Boolean = false
     )

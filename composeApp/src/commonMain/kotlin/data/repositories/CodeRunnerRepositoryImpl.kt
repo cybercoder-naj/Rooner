@@ -1,6 +1,6 @@
 package data.repositories
 
-import domain.executables.Executable
+import domain.LanguageSetting
 import domain.models.ProcessOutput
 import domain.repositories.CodeRunnerRepository
 import kotlinx.coroutines.Dispatchers
@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit
  *      which makes it difficult to test. Need to abstract this away.
  */
 class CodeRunnerRepositoryImpl(
-    private val executable: Executable
+    private val languageSetting: LanguageSetting
 ) : CodeRunnerRepository {
     override fun runCode(code: String) = flow {
         emit(ProcessOutput.OutputString("Uploading the script. . ."))
         val path = Paths.get(System.getenv("HOME"), ".cache")
-        val file = File(path.toString(), "script.${executable.fileExtension}")
+        val file = File(path.toString(), "script.${languageSetting.fileExtension}")
         try {
             if (!file.exists())
                 file.createNewFile()
@@ -40,7 +40,7 @@ class CodeRunnerRepositoryImpl(
         val process: Process
         try {
             process = ProcessBuilder(
-                executable.executionCommand + file.absolutePath
+                languageSetting.executionCommand + file.absolutePath
             ).start()
         } catch (ioe: IOException) {
             emit(ProcessOutput.ErrorString("Application faulted while executing the script: ${ioe.message}"))
