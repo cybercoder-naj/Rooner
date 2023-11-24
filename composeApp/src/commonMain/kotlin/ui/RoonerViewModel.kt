@@ -5,14 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import domain.LanguageSetting
-import domain.repositories.CodeRunnerRepository
-import domain.models.ProcessStatus
 import domain.models.ProcessOutput
+import domain.models.ProcessStatus
+import domain.repositories.CodeRunnerRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
 import utils.highlight
-import java.lang.IllegalStateException
 
 class RoonerViewModel(
     private val repository: CodeRunnerRepository,
@@ -32,7 +31,7 @@ class RoonerViewModel(
     val uiState: State<UiState>
         get() = _uiState
 
-    private val _output = MutableStateFlow(buildAnnotatedString {  })
+    private val _output = MutableStateFlow(buildAnnotatedString { })
     val output: StateFlow<AnnotatedString>
         get() = _output
 
@@ -43,6 +42,7 @@ class RoonerViewModel(
         data object RunCode : UiEvent()
         data object StopCode : UiEvent()
         data object ToggleAutoClear : UiEvent()
+        data class SetCursor(val row: Int, val col: Int) : UiEvent()
     }
 
     fun action(event: UiEvent) {
@@ -57,7 +57,7 @@ class RoonerViewModel(
 
             RunCode -> {
                 if (uiState.value.autoClear)
-                    _output.value = buildAnnotatedString {  }
+                    _output.value = buildAnnotatedString { }
 
                 if (uiState.value.text.text.isBlank()) {
                     val errStr = ProcessOutput.ErrorString("There is nothing to run!")
@@ -70,7 +70,9 @@ class RoonerViewModel(
                     repository.runCode(uiState.value.text.text).collect {
                         when (it) {
                             is ProcessOutput.Complete ->
-                                _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Done(it.status))
+                                _uiState.value =
+                                    uiState.value.copy(runningStatus = ProcessStatus.Done(it.status))
+
                             else -> addToOutput(it)
                         }
                     }
@@ -86,6 +88,10 @@ class RoonerViewModel(
             UiEvent.ToggleAutoClear -> {
                 _uiState.value = uiState.value.copy(autoClear = !uiState.value.autoClear)
             }
+
+            is UiEvent.SetCursor -> {
+                println(event)
+            }
         }
     }
 
@@ -99,6 +105,7 @@ class RoonerViewModel(
                     withStyle(style = SpanStyle(color = Color.Red)) {
                         appendLine(makeClickable(output.message))
                     }
+
                 else -> throw IllegalStateException("Assertion failed")
             }
         }
@@ -107,12 +114,30 @@ class RoonerViewModel(
     }
 
     private fun makeClickable(string: String): AnnotatedString {
-        val match = Regex("${languageSetting.filename}:(\\(\\d+:\\d+\\))")
-            .findAll(string)
-            .forEach {
-                it.groupValues.also(::println)
+        val regexFilename = languageSetting.filename.replace(".", "\\.")
+        val match = Regex("$regexFilename:(\\d+(?::\\d+)?)").find(string)
+            ?: return buildAnnotatedString { append(string) }
+
+        return buildAnnotatedString {
+            append(string.substringBefore(match.groupValues[0]))
+            withStyle(
+                style = SpanStyle(
+                    color = Color.Blue,
+                    textDecoration = TextDecoration.Underline
+                )
+            ) {
+                append(match.groupValues[0])
             }
-        return buildAnnotatedString { append(string) }
+            append(string.substringAfterLast(match.groupValues[0]))
+
+            val index = string.indexOf(match.groupValues[0])
+            addStringAnnotation(
+                tag = "cursorSet",
+                annotation = match.groupValues[1],
+                start = index,
+                end = index + match.groupValues[0].length
+            )
+        }
     }
 
     data class UiState(
