@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
@@ -90,9 +91,21 @@ class RoonerViewModel(
             }
 
             is UiEvent.SetCursor -> {
-                println(event)
+                _uiState.value = uiState.value.copy(
+                    text = uiState.value.text.copy(
+                        selection = getSelection(event)
+                    )
+                )
             }
         }
+    }
+
+    private fun getSelection(event: UiEvent.SetCursor): TextRange {
+        val lines = uiState.value.text.text.lines()
+        var index = 0
+        for (i in 0..<(event.row - 1))
+            index += lines[i].length
+        return TextRange(index + event.col - 1, index + event.col)
     }
 
     private fun addToOutput(output: ProcessOutput) {
