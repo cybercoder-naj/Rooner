@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -89,7 +91,11 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 text = output.value,
                 onClick = {
                     output.value
-                        .getStringAnnotations("cursorSet", it, it) // TODO cursorSet move to constant
+                        .getStringAnnotations(
+                            "cursorSet",
+                            it,
+                            it
+                        ) // TODO cursorSet move to constant
                         .firstOrNull()?.let { cursorPosition ->
                             val params = cursorPosition.item.split(":").map(String::toInt)
                             if (params.size == 1)
@@ -102,7 +108,9 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                     color = Color.White,
                     fontFamily = FontFamily.Monospace,
                     fontSize = 16.sp
-                )
+                ),
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
             )
         }
     }
