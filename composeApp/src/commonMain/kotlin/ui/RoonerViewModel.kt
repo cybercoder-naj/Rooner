@@ -37,6 +37,7 @@ class RoonerViewModel(
         get() = _output
 
     private var runJob: Job? = null
+    private var startTime = 0L
 
     sealed class UiEvent {
         data class EditCode(val newText: TextFieldValue) : UiEvent()
@@ -65,25 +66,14 @@ class RoonerViewModel(
                     addToOutput(errStr)
                 }
 
-                _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
-
-                runJob = CoroutineScope(Dispatchers.Default).launch {
-                    repository.runCode(uiState.value.text.text).collect {
-                        when (it) {
-                            is ProcessOutput.Complete ->
-                                _uiState.value =
-                                    uiState.value.copy(runningStatus = ProcessStatus.Done(it.status))
-
-                            else -> addToOutput(it)
-                        }
-                    }
-                }
+                startCode()
             }
 
             UiEvent.StopCode -> {
                 runJob?.cancel()
+
                 // TODO use constant instead of magic number 130
-                _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Done(130))
+                endCode(130)
             }
 
             UiEvent.ToggleAutoClear -> {
@@ -98,6 +88,26 @@ class RoonerViewModel(
                 )
             }
         }
+    }
+
+    private fun startCode() {
+        _uiState.value = uiState.value.copy(runningStatus = ProcessStatus.Active)
+        startTime = System.currentTimeMillis()
+        runJob = CoroutineScope(Dispatchers.Default).launch {
+            repository.runCode(uiState.value.text.text).collect {
+                when (it) {
+                    is ProcessOutput.Complete -> endCode(it.status)
+                    else -> addToOutput(it)
+                }
+            }
+        }
+    }
+
+    private fun endCode(status: Int) {
+        _uiState.value =
+            uiState.value.copy(runningStatus = ProcessStatus.Done(status))
+        val time = System.currentTimeMillis() - startTime
+        // TODO register time
     }
 
     private fun getSelection(event: UiEvent.SetCursor): TextRange {
