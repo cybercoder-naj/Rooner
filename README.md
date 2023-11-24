@@ -4,6 +4,18 @@ A Basic code editor that executes any Kotlin script.
 This application is written in [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform)
 intended for desktop applications. 
 
+## Table of Contents
+
+- [Screenshots and Demo](#screenshots-and-demo)
+- [Installation](#installation)
+  - [Prerequisites](#prerequisites)
+  - [Run locally](#run-locally)
+- [Roadmap](#roadmap)
+- [Known Issues](#known-issues)
+- [Navigating the project](#navigating-the-project)
+- [Authors](#authors)
+- [Acknowledgements](#acknowledgements)
+
 ## Screenshots and Demo
 
 **_Coming soon!_**
