@@ -104,7 +104,7 @@ class RoonerViewModel(
         val lines = uiState.value.text.text.lines()
         var index = 0
         for (i in 0..<(event.row - 1))
-            index += lines[i].length
+            index += lines[i].length + 1
         return TextRange(index + event.col - 1, index + event.col)
     }
 
