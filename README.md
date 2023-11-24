@@ -54,6 +54,16 @@ Start the server
 
  - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
 
+## Navigating the project
+
+All of my code for this project is under [composeApp/src/commonMain/kotlin](composeApp/src/commonMain/kotlin).
+ - `App.kt` - this contains the parent composable called from `composeApp/src/desktopMain`.
+ - `data/` - contains concrete implementations of the domain layer.
+ - `di/` - A basic dependency injection singleton module.
+ - `domain/` - The Business logic layer; contains the interfaces of core logic for the application.
+ - `ui/` - The Presentation layer, which hosts its own ViewModel.
+ - `utils/` - contains utility functions and variables for the application.
+
 ## Authors
 
  - [@cybercoder-naj](https://www.github.com/cybercoder-naj)
