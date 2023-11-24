@@ -1,6 +1,5 @@
 package ui.screen
 
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -92,7 +91,11 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 text = output.value,
                 onClick = {
                     output.value
-                        .getStringAnnotations("cursorSet", it, it) // TODO cursorSet move to constant
+                        .getStringAnnotations(
+                            "cursorSet",
+                            it,
+                            it
+                        ) // TODO cursorSet move to constant
                         .firstOrNull()?.let { cursorPosition ->
                             val params = cursorPosition.item.split(":").map(String::toInt)
                             if (params.size == 1)
