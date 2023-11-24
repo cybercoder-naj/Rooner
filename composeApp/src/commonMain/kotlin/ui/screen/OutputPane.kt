@@ -6,20 +6,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import di.AppContainer
-import domain.models.ProcessOutput
 import domain.models.ProcessStatus
 import ui.RoonerViewModel
+import ui.RoonerViewModel.UiEvent.SetCursor
 import ui.components.Pane
 
 @Composable
@@ -68,6 +69,7 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                         )
                     }
                 }
+
                 ProcessStatus.Inactive -> Unit
             }
         }
@@ -81,44 +83,27 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(start = 12.dp, top = 12.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 12.dp, start = 8.dp)
-            ) {
-                items(output.value) {
-                    when (it) {
-                        is ProcessOutput.Complete -> ErrorText(
-                            text = "IDE Error occurred: ProcessOutput.Complete found in RoonerModel.output"
-                        )
-
-                        is ProcessOutput.ErrorString -> ErrorText(
-                            text = it.message
-                        )
-
-                        is ProcessOutput.OutputString -> StandardText(
-                            text = it.message
-                        )
-                    }
-                }
-            }
+            ClickableText(
+                text = output.value,
+                onClick = {
+                    output.value
+                        .getStringAnnotations("cursorSet", it, it) // TODO cursorSet move to constant
+                        .firstOrNull()?.let { cursorPosition ->
+                            val params = cursorPosition.item.split(":").map(String::toInt)
+                            if (params.size == 1)
+                                viewModel.action(SetCursor(params[0], 1))
+                            else
+                                viewModel.action(SetCursor(params[0], params[1]))
+                        }
+                },
+                style = TextStyle(
+                    color = Color.White,
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 16.sp
+                )
+            )
         }
     }
-}
-
-@Composable
-fun StandardText(text: String) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.onBackground
-    )
-}
-
-@Composable
-fun ErrorText(text: String) {
-    Text(
-        text = text,
-        color = MaterialTheme.colors.error
-    )
 }
