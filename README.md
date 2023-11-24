@@ -10,7 +10,7 @@ intended for desktop applications.
 
 ## Installation
 
-### Prerequities
+### Prerequisites
 
 You need to have the following installed
 
