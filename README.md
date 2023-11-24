@@ -47,7 +47,7 @@ Start the server
 - [x] Show errors in compilation/runtime
 - [x] Indicators of current state
 - [x] Syntax Highlighting
-- [ ] Clickable links on error messages
+- [x] Clickable links on error messages
 - [ ] ETA of code execution
 
 ## Known Issues

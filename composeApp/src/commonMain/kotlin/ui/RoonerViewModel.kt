@@ -115,7 +115,7 @@ class RoonerViewModel(
             when (output) {
                 is ProcessOutput.OutputString -> appendLine(output.message)
                 is ProcessOutput.ErrorString ->
-                    withStyle(style = SpanStyle(color = Color.Red)) {
+                    withStyle(style = SpanStyle(color = Color.Red)) { // TODO change colors of output pane
                         appendLine(makeClickable(output.message))
                     }
 
