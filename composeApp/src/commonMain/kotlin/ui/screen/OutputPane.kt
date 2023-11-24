@@ -89,7 +89,7 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 text = output.value,
                 onClick = {
                     output.value
-                        .getStringAnnotations("cursorSet", it, it)
+                        .getStringAnnotations("cursorSet", it, it) // TODO cursorSet move to constant
                         .firstOrNull()?.let { cursorPosition ->
                             val params = cursorPosition.item.split(":").map(String::toInt)
                             if (params.size == 1)
