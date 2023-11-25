@@ -12,8 +12,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -30,61 +36,25 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
     val output = viewModel.output.collectAsState()
     val state = viewModel.uiState.value
 
-    val indicator: @Composable () -> Unit = { // TODO make a composable function
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            when (state.runningStatus) {
-                ProcessStatus.Active -> {
-                    Text(
-                        text = "\uf111",
-                        color = Color.Yellow
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = "Running",
-                        color = Color.Yellow
-                    )
-                }
-
-                is ProcessStatus.Done -> {
-                    val done = state.runningStatus as ProcessStatus.Done
-                    if (done.status == 0) { // TODO change to function
-                        Text(
-                            text = "\uf00c", // TODO use constants instead
-                            color = Color.Green
-                        )
-                        Spacer(Modifier.width(4.dp)) // TODO move to constant
-                        Text(
-                            text = "Success",
-                            color = Color.Green
-                        )
-                    } else {
-                        Text(
-                            text = "\uf00d", // TODO use constants instead
-                            color = Color.Red
-                        )
-                        Spacer(Modifier.width(4.dp))
-                        Text(
-                            text = "Failed (exit status ${done.status})",
-                            color = Color.Red
-                        )
-                    }
-                }
-
-                ProcessStatus.Inactive -> Unit
-            }
-        }
-    }
-
     Pane(
         title = "Output",
         modifier = Modifier.fillMaxSize(),
-        auxiliaryInfo = indicator
+        auxiliaryInfo = { Indicator(state.runningStatus) }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .drawBehind {
+                    if (state.runningStatus !is ProcessStatus.Active)
+                        return@drawBehind
+
+                    val dx = (state.eta.toFloat() / state.initialEta.toFloat()) * size.width
+                    drawLine(
+                        color = Color.Green,
+                        start = Offset(0f, 0f),
+                        end = Offset(dx, 0f)
+                    )
+                }
                 .padding(start = 12.dp, top = 12.dp)
         ) {
             ClickableText(
@@ -112,6 +82,53 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
             )
+        }
+    }
+}
+
+@Composable
+fun Indicator(runningStatus: ProcessStatus) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        when (runningStatus) {
+            ProcessStatus.Active -> {
+                Text(
+                    text = "\uf111",
+                    color = Color.Yellow
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = "Running",
+                    color = Color.Yellow
+                )
+            }
+
+            is ProcessStatus.Done -> {
+                if (runningStatus.status == 0) { // TODO change to function
+                    Text(
+                        text = "\uf00c", // TODO use constants instead
+                        color = Color.Green
+                    )
+                    Spacer(Modifier.width(4.dp)) // TODO move to constant
+                    Text(
+                        text = "Success",
+                        color = Color.Green
+                    )
+                } else {
+                    Text(
+                        text = "\uf00d", // TODO use constants instead
+                        color = Color.Red
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "Failed (exit status ${runningStatus.status})",
+                        color = Color.Red
+                    )
+                }
+            }
+
+            ProcessStatus.Inactive -> Unit
         }
     }
 }
