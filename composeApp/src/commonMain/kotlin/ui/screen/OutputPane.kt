@@ -39,7 +39,7 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
     Pane(
         title = "Output",
         modifier = Modifier.fillMaxSize(),
-        auxiliaryInfo = { Indicator(state.runningStatus) }
+        auxiliaryInfo = { Indicator(state.runningStatus, state.eta / 1000L + 1) }
     ) {
         Box(
             modifier = Modifier
@@ -87,7 +87,7 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
 }
 
 @Composable
-fun Indicator(runningStatus: ProcessStatus) {
+fun Indicator(runningStatus: ProcessStatus, eta: Long) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -101,6 +101,10 @@ fun Indicator(runningStatus: ProcessStatus) {
                 Text(
                     text = "Running",
                     color = Color.Yellow
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "ETA: $eta min(s)"
                 )
             }
 
