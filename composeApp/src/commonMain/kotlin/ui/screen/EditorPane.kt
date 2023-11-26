@@ -29,7 +29,8 @@ import ui.components.Pane
 
 @Composable
 fun EditorPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
-    val state = viewModel.uiState.value
+    val state = viewModel.uiState
+    val codeText = viewModel.text
     val editorFontSize = 16.sp
     val editorLineHeight = 1.em
     val editorPaddingTop = 12.dp
@@ -55,7 +56,7 @@ fun EditorPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                     .background(MaterialTheme.colors.surface)
                     .padding(start = 8.dp, end = 12.dp)
             ) {
-                for (i in state.text.text.lines().indices) {
+                for (i in codeText.text.lines().indices) {
                     Text(
                         text = "${i + 1}",
                         fontFamily = FontFamily.Monospace,
@@ -68,7 +69,7 @@ fun EditorPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
 
             CompositionLocalProvider(LocalTextSelectionColors provides selectionColours) {
                 BasicTextField(
-                    value = state.text,
+                    value = codeText,
                     onValueChange = { viewModel.action(EditCode(it)) },
                     modifier = Modifier
                         .fillMaxSize()

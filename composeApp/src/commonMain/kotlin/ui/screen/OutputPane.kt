@@ -34,7 +34,7 @@ import ui.components.Pane
 @Composable
 fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
     val output = viewModel.output.collectAsState()
-    val state = viewModel.uiState.value
+    val state = viewModel.uiState
 
     Pane(
         title = "Output",

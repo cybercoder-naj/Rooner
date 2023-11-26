@@ -42,7 +42,7 @@ private const val STOP_ICON = "\uf04d"
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
-    val state = viewModel.uiState.value
+    val state = viewModel.uiState
     val isProcessRunning = state.runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier

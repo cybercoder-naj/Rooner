@@ -1,7 +1,8 @@
 package ui
 
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -25,16 +26,17 @@ import kotlinx.coroutines.launch
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
 import utils.highlight
-import kotlin.math.max
 
 class RoonerViewModel(
     private val repository: CodeRunnerRepository,
     private val languageSetting: LanguageSetting,
     private val timeAnalyticsRepository: TimeAnalyticsRepository
 ) {
-    private val _uiState = mutableStateOf(UiState())
-    val uiState: State<UiState>
-        get() = _uiState
+    var uiState by mutableStateOf(UiState())
+        private set
+
+    var text by mutableStateOf(TextFieldValue())
+        private set
 
     private val _output = MutableStateFlow(buildAnnotatedString { })
     val output: StateFlow<AnnotatedString>
@@ -55,18 +57,16 @@ class RoonerViewModel(
     fun action(event: UiEvent) {
         when (event) {
             is EditCode -> {
-                _uiState.value = uiState.value.copy(
-                    text = event.newText.copy(
-                        annotatedString = highlight(event.newText.text, languageSetting)
-                    )
+                text = event.newText.copy(
+                    annotatedString = highlight(event.newText.text, languageSetting)
                 )
             }
 
             RunCode -> {
-                if (uiState.value.autoClear)
+                if (uiState.autoClear)
                     _output.value = buildAnnotatedString { }
 
-                if (uiState.value.text.text.isBlank()) {
+                if (text.text.isBlank()) {
                     val errStr = ProcessOutput.ErrorString("There is nothing to run!")
                     addToOutput(errStr)
                 }
@@ -82,14 +82,12 @@ class RoonerViewModel(
             }
 
             UiEvent.ToggleAutoClear -> {
-                _uiState.value = uiState.value.copy(autoClear = !uiState.value.autoClear)
+                uiState = uiState.copy(autoClear = !uiState.autoClear)
             }
 
             is UiEvent.SetCursor -> {
-                _uiState.value = uiState.value.copy(
-                    text = uiState.value.text.copy(
-                        selection = getSelection(event)
-                    )
+                text = text.copy(
+                    selection = getSelection(event)
                 )
             }
         }
@@ -97,24 +95,24 @@ class RoonerViewModel(
 
     private fun startCode() {
         val eta = timeAnalyticsRepository.getETA()
-        _uiState.value = uiState.value.copy(
+        uiState = uiState.copy(
             runningStatus = ProcessStatus.Active,
             eta = eta,
             initialEta = eta
         )
 
         timeJob = CoroutineScope(Dispatchers.Default).launch {
-            while (uiState.value.eta > 0) {
+            while (uiState.eta > 0) {
                 delay(1000L)
-                _uiState.value = uiState.value.copy(
-                    eta = maxOf(uiState.value.eta - 1000L, 0L)
+                uiState = uiState.copy(
+                    eta = maxOf(uiState.eta - 1000L, 0L)
                 )
             }
         }
 
         startTime = System.currentTimeMillis()
         runJob = CoroutineScope(Dispatchers.Default).launch {
-            repository.runCode(uiState.value.text.text).collect {
+            repository.runCode(text.text).collect {
                 when (it) {
                     is ProcessOutput.Complete -> endCode(it.status)
                     else -> addToOutput(it)
@@ -124,8 +122,8 @@ class RoonerViewModel(
     }
 
     private fun endCode(status: Int) {
-        _uiState.value =
-            uiState.value.copy(runningStatus = ProcessStatus.Done(status))
+        uiState =
+            uiState.copy(runningStatus = ProcessStatus.Done(status))
         val time = System.currentTimeMillis() - startTime
 
         timeJob?.cancel()
@@ -133,7 +131,7 @@ class RoonerViewModel(
     }
 
     private fun getSelection(event: UiEvent.SetCursor): TextRange {
-        val lines = uiState.value.text.text.lines()
+        val lines = text.text.lines()
         var index = 0
         for (i in 0..<(event.row - 1))
             index += lines[i].length + 1
@@ -186,7 +184,6 @@ class RoonerViewModel(
     }
 
     data class UiState(
-        var text: TextFieldValue = TextFieldValue(buildAnnotatedString {}),
         var runningStatus: ProcessStatus = ProcessStatus.Inactive,
         var autoClear: Boolean = false,
         var eta: Long = 0L,
