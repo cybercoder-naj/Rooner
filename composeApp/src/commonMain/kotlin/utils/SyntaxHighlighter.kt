@@ -7,7 +7,10 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import domain.LanguageSetting
 
-fun highlight(code: String, languageSetting: LanguageSetting): AnnotatedString { // TODO move this function to viewmodel
+fun highlight(
+    code: String,
+    languageSetting: LanguageSetting
+): AnnotatedString { // TODO move this function to viewmodel
     val (words, separators) = code.splitWithCharacter()
 
     val annotatedWords = words.map {

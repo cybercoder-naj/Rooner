@@ -1,4 +1,4 @@
-package domain.models
+package data.models
 
 sealed class ProcessStatus {
     data object Inactive : ProcessStatus()

@@ -21,8 +21,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import data.models.ProcessStatus
 import di.AppContainer
-import domain.models.ProcessStatus
 import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.SetCursor
 import ui.components.Pane

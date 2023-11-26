@@ -4,8 +4,8 @@ import domain.Logger
 import domain.repositories.TimeAnalyticsRepository
 
 class TimeAnalyticsRepositoryImpl(
-  private val logger: Logger
-): TimeAnalyticsRepository {
+    private val logger: Logger
+) : TimeAnalyticsRepository {
     private val times = mutableListOf<Long>()
 
     companion object {
