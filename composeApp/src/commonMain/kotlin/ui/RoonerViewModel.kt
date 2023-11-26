@@ -32,9 +32,6 @@ class RoonerViewModel(
     private val languageSetting: LanguageSetting,
     private val timeAnalyticsRepository: TimeAnalyticsRepository
 ) {
-    var uiState by mutableStateOf(UiState())
-        private set
-
     var text by mutableStateOf(TextFieldValue())
         private set
 
@@ -42,6 +39,9 @@ class RoonerViewModel(
         private set
 
     var autoClear by mutableStateOf(false)
+        private set
+
+    var eta by mutableStateOf(0L to 0L)
         private set
 
     private val _output = MutableStateFlow(buildAnnotatedString { })
@@ -100,19 +100,14 @@ class RoonerViewModel(
     }
 
     private fun startCode() {
-        val eta = timeAnalyticsRepository.getETA()
+        val newEta = timeAnalyticsRepository.getETA()
         runningStatus = ProcessStatus.Active
-        uiState = uiState.copy(
-            eta = eta,
-            initialEta = eta
-        )
+        eta = newEta to newEta
 
         timeJob = CoroutineScope(Dispatchers.Default).launch {
-            while (uiState.eta > 0) {
+            while (eta.first > 0) {
                 delay(1000L)
-                uiState = uiState.copy(
-                    eta = maxOf(uiState.eta - 1000L, 0L)
-                )
+                eta = eta.copy(first = eta.first - 1000L)
             }
         }
 
@@ -187,9 +182,4 @@ class RoonerViewModel(
             )
         }
     }
-
-    data class UiState(
-        var eta: Long = 0L,
-        var initialEta: Long = 0L // TODO need to change all of this
-    )
 }

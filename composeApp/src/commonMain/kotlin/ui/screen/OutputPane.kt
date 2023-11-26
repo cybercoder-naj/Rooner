@@ -12,10 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -34,13 +30,12 @@ import ui.components.Pane
 @Composable
 fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
     val output = viewModel.output.collectAsState()
-    val state = viewModel.uiState
     val runningStatus = viewModel.runningStatus
 
     Pane(
         title = "Output",
         modifier = Modifier.fillMaxSize(),
-        auxiliaryInfo = { Indicator(runningStatus, state.eta / 1000L + 1) }
+        auxiliaryInfo = { Indicator(runningStatus, viewModel.eta.first / 1000L + 1) }
     ) {
         Box(
             modifier = Modifier
@@ -49,7 +44,8 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                     if (runningStatus !is ProcessStatus.Active)
                         return@drawBehind
 
-                    val dx = (state.eta.toFloat() / state.initialEta.toFloat()) * size.width
+                    val dx =
+                        (viewModel.eta.first.toFloat() / viewModel.eta.second.toFloat()) * size.width
                     drawLine(
                         color = Color.Green,
                         start = Offset(0f, 0f),
