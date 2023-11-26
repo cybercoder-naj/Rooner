@@ -1,29 +1,28 @@
 package data.repositories
 
 import domain.LanguageSetting
+import domain.OsInformation
 import domain.models.ProcessOutput
 import domain.repositories.CodeRunnerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
-import java.nio.file.Paths
 import java.util.Scanner
 import java.util.concurrent.TimeUnit
 
-/*
- * TODO this class is coupled with the details of files and processes.
- *      which makes it difficult to test. Need to abstract this away.
- */
 class CodeRunnerRepositoryImpl(
-    private val languageSetting: LanguageSetting
+    private val languageSetting: LanguageSetting,
+    private val osInformation: OsInformation
 ) : CodeRunnerRepository {
     override fun runCode(code: String) = flow {
         emit(ProcessOutput.OutputString("Uploading the script. . ."))
-        val path = Paths.get(System.getenv("HOME"), ".cache")
+        val path = osInformation.getCachePath()
         val file = File(path.toString(), languageSetting.filename)
+
         try {
             if (!file.exists())
                 file.createNewFile()

@@ -11,8 +11,10 @@ class KotlinLanguageSetting : LanguageSetting {
         get() = "kts"
     override val filename: String
         get() = "$FILENAME.$fileExtension"
+    override val baseCommand: String
+        get() = "kotlinc"
     override val executionCommand: List<String>
-        get() = "kotlinc -script".split(" ")
+        get() = "$baseCommand -script".split(" ")
     override val keywords: Map<String, Color>
         get() = listOf(
             "as",
