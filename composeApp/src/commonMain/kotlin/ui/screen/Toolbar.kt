@@ -43,7 +43,7 @@ private const val STOP_ICON = "\uf04d"
 @Composable
 fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
     val state = viewModel.uiState
-    val isProcessRunning = state.runningStatus is ProcessStatus.Active
+    val isProcessRunning = viewModel.runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier
             .fillMaxWidth()

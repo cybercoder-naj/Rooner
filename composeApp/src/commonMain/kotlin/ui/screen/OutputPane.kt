@@ -35,17 +35,18 @@ import ui.components.Pane
 fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
     val output = viewModel.output.collectAsState()
     val state = viewModel.uiState
+    val runningStatus = viewModel.runningStatus
 
     Pane(
         title = "Output",
         modifier = Modifier.fillMaxSize(),
-        auxiliaryInfo = { Indicator(state.runningStatus, state.eta / 1000L + 1) }
+        auxiliaryInfo = { Indicator(runningStatus, state.eta / 1000L + 1) }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .drawBehind {
-                    if (state.runningStatus !is ProcessStatus.Active)
+                    if (runningStatus !is ProcessStatus.Active)
                         return@drawBehind
 
                     val dx = (state.eta.toFloat() / state.initialEta.toFloat()) * size.width

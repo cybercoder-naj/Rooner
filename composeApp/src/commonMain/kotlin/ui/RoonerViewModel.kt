@@ -38,6 +38,9 @@ class RoonerViewModel(
     var text by mutableStateOf(TextFieldValue())
         private set
 
+    var runningStatus by mutableStateOf<ProcessStatus>(ProcessStatus.Inactive)
+        private set
+
     private val _output = MutableStateFlow(buildAnnotatedString { })
     val output: StateFlow<AnnotatedString>
         get() = _output
@@ -95,8 +98,8 @@ class RoonerViewModel(
 
     private fun startCode() {
         val eta = timeAnalyticsRepository.getETA()
+        runningStatus = ProcessStatus.Active
         uiState = uiState.copy(
-            runningStatus = ProcessStatus.Active,
             eta = eta,
             initialEta = eta
         )
@@ -122,8 +125,7 @@ class RoonerViewModel(
     }
 
     private fun endCode(status: Int) {
-        uiState =
-            uiState.copy(runningStatus = ProcessStatus.Done(status))
+        runningStatus = ProcessStatus.Done(status)
         val time = System.currentTimeMillis() - startTime
 
         timeJob?.cancel()
@@ -184,7 +186,6 @@ class RoonerViewModel(
     }
 
     data class UiState(
-        var runningStatus: ProcessStatus = ProcessStatus.Inactive,
         var autoClear: Boolean = false,
         var eta: Long = 0L,
         var initialEta: Long = 0L // TODO need to change all of this
