@@ -60,11 +60,12 @@ Start the server
 - [x] Indicators of current state
 - [x] Syntax Highlighting
 - [x] Clickable links on error messages
-- [ ] ETA of code execution
+- [x] ETA of code execution
 
 ## Known Issues
 
  - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
+ - ETA time does not give accurate results.
 
 ## Navigating the project
 
