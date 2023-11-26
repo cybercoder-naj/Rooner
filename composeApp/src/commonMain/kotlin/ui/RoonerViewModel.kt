@@ -41,6 +41,9 @@ class RoonerViewModel(
     var runningStatus by mutableStateOf<ProcessStatus>(ProcessStatus.Inactive)
         private set
 
+    var autoClear by mutableStateOf(false)
+        private set
+
     private val _output = MutableStateFlow(buildAnnotatedString { })
     val output: StateFlow<AnnotatedString>
         get() = _output
@@ -66,7 +69,7 @@ class RoonerViewModel(
             }
 
             RunCode -> {
-                if (uiState.autoClear)
+                if (autoClear)
                     _output.value = buildAnnotatedString { }
 
                 if (text.text.isBlank()) {
@@ -85,7 +88,7 @@ class RoonerViewModel(
             }
 
             UiEvent.ToggleAutoClear -> {
-                uiState = uiState.copy(autoClear = !uiState.autoClear)
+                autoClear = !autoClear
             }
 
             is UiEvent.SetCursor -> {
@@ -186,7 +189,6 @@ class RoonerViewModel(
     }
 
     data class UiState(
-        var autoClear: Boolean = false,
         var eta: Long = 0L,
         var initialEta: Long = 0L // TODO need to change all of this
     )

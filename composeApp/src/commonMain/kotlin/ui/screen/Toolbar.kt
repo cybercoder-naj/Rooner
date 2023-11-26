@@ -42,7 +42,6 @@ private const val STOP_ICON = "\uf04d"
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
-    val state = viewModel.uiState
     val isProcessRunning = viewModel.runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier
@@ -59,7 +58,7 @@ fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = state.autoClear,
+                checked = viewModel.autoClear,
                 onCheckedChange = { viewModel.action(ToggleAutoClear) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color.White

@@ -29,7 +29,6 @@ import ui.components.Pane
 
 @Composable
 fun EditorPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
-    val state = viewModel.uiState
     val codeText = viewModel.text
     val editorFontSize = 16.sp
     val editorLineHeight = 1.em
