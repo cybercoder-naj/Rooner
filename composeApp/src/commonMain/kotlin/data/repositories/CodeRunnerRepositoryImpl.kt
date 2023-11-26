@@ -7,6 +7,7 @@ import domain.repositories.CodeRunnerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import utils.ExitValue
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
@@ -30,7 +31,7 @@ class CodeRunnerRepositoryImpl(
             file.deleteOnExit()
         } catch (ioe: IOException) {
             emit(ProcessOutput.ErrorString("Application faulted while uploading the script: ${ioe.message}"))
-            emit(ProcessOutput.Complete(1)) // TODO replace with constant
+            emit(ProcessOutput.Complete(ExitValue.FAILURE))
             return@flow
         }
 
@@ -42,7 +43,7 @@ class CodeRunnerRepositoryImpl(
             ).start()
         } catch (ioe: IOException) {
             emit(ProcessOutput.ErrorString("Application faulted while executing the script: ${ioe.message}"))
-            emit(ProcessOutput.Complete(1))
+            emit(ProcessOutput.Complete(ExitValue.FAILURE))
             return@flow
         }
 
@@ -66,7 +67,7 @@ class CodeRunnerRepositoryImpl(
             process.waitFor(30L, TimeUnit.SECONDS);
         } catch (ie: InterruptedException) {
             emit(ProcessOutput.ErrorString("Script took longer than 30 seconds to execute."))
-            emit(ProcessOutput.Complete(1))
+            emit(ProcessOutput.Complete(ExitValue.FAILURE))
             return@flow
         }
 

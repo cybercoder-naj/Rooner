@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +27,8 @@ import di.AppContainer
 import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.SetCursor
 import ui.components.Pane
+import utils.Constants
+import utils.Icons
 
 @Composable
 fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
@@ -59,10 +62,10 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 onClick = {
                     output.value
                         .getStringAnnotations(
-                            "cursorSet",
+                            Constants.SCRIPT_ERROR_LOCATION,
                             it,
                             it
-                        ) // TODO cursorSet move to constant
+                        )
                         .firstOrNull()?.let { cursorPosition ->
                             val params = cursorPosition.item.split(":").map(String::toInt)
                             if (params.size == 1)
@@ -101,24 +104,24 @@ fun Indicator(runningStatus: ProcessStatus, eta: Long) {
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "ETA: $eta min(s)"
+                    text = "ETA: $eta sec(s)"
                 )
             }
 
             is ProcessStatus.Done -> {
-                if (runningStatus.status == 0) { // TODO change to function
+                if (runningStatus.isSuccessful) {
                     Text(
-                        text = "\uf00c", // TODO use constants instead
+                        text = Icons.CHECKMARK,
                         color = Color.Green
                     )
-                    Spacer(Modifier.width(4.dp)) // TODO move to constant
+                    Spacer(Modifier.width(4.dp))
                     Text(
                         text = "Success",
                         color = Color.Green
                     )
                 } else {
                     Text(
-                        text = "\uf00d", // TODO use constants instead
+                        text = Icons.XCROSS,
                         color = Color.Red
                     )
                     Spacer(Modifier.width(4.dp))

@@ -35,9 +35,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.*
+import utils.Icons
 
-private const val PLAY_ICON = "\uf04b"
-private const val STOP_ICON = "\uf04d"
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
@@ -86,7 +85,7 @@ fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 onClick = { viewModel.action(StopCode) },
             ) {
                 Text(
-                    text = STOP_ICON,
+                    text = Icons.STOP_BUTTON,
                     color = Color.Red,
                     fontSize = 24.sp,
                 )
@@ -103,7 +102,7 @@ fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 onClick = { viewModel.action(RunCode) }
             ) {
                 Text(
-                    text = PLAY_ICON,
+                    text = Icons.PLAY_BUTTON,
                     color = Color.Green,
                     fontSize = 24.sp
                 )

@@ -2,7 +2,7 @@ package data
 
 import androidx.compose.ui.graphics.Color
 import domain.LanguageSetting
-import utils.FILENAME
+import utils.Constants.FILENAME
 
 class KotlinLanguageSetting : LanguageSetting {
     override val name: String

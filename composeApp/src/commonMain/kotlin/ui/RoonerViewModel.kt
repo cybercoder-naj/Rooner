@@ -25,7 +25,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
-import utils.highlight
+import utils.Constants
+import utils.ExitValue
+import utils.combine
+import utils.splitWithCharacter
 
 class RoonerViewModel(
     private val repository: CodeRunnerRepository,
@@ -83,8 +86,7 @@ class RoonerViewModel(
             UiEvent.StopCode -> {
                 runJob?.cancel()
 
-                // TODO use constant instead of magic number 130
-                endCode(130)
+                endCode(ExitValue.SIGINT)
             }
 
             UiEvent.ToggleAutoClear -> {
@@ -145,7 +147,7 @@ class RoonerViewModel(
             when (output) {
                 is ProcessOutput.OutputString -> appendLine(output.message)
                 is ProcessOutput.ErrorString ->
-                    withStyle(style = SpanStyle(color = Color.Red)) { // TODO change colors of output pane
+                    withStyle(style = SpanStyle(color = Color.Red)) {
                         appendLine(makeClickable(output.message))
                     }
 
@@ -165,7 +167,7 @@ class RoonerViewModel(
             append(string.substringBefore(match.groupValues[0]))
             withStyle(
                 style = SpanStyle(
-                    color = Color.Blue,
+                    color = Color(0xFF85a3e0),
                     textDecoration = TextDecoration.Underline
                 )
             ) {
@@ -175,11 +177,31 @@ class RoonerViewModel(
 
             val index = string.indexOf(match.groupValues[0])
             addStringAnnotation(
-                tag = "cursorSet",
+                tag = Constants.SCRIPT_ERROR_LOCATION,
                 annotation = match.groupValues[1],
                 start = index,
                 end = index + match.groupValues[0].length
             )
         }
     }
+
+    private fun highlight(
+        code: String,
+        languageSetting: LanguageSetting
+    ): AnnotatedString {
+        val (words, separators) = code.splitWithCharacter()
+
+        val annotatedWords = words.map {
+            buildAnnotatedString {
+                if (it in languageSetting.keywords)
+                    withStyle(style = SpanStyle(Color.Yellow)) {
+                        append(it)
+                    }
+                else append(it)
+            }
+        }
+
+        return annotatedWords.combine(separators)
+    }
+
 }
