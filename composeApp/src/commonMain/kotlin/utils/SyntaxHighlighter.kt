@@ -1,19 +1,14 @@
 package utils
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
-import domain.LanguageSetting
-
-fun String.splitWithCharacter(): Pair<List<String>, List<Char>> {
+fun String.splitBy(
+    predicate: (Char) -> Boolean = Char::isLetterOrDigit
+): Pair<List<String>, List<Char>> {
     val words = mutableListOf<String>()
     val separators = mutableListOf<Char>()
 
     val word = StringBuilder()
     for (ch in this) {
-        if (ch.isLetterOrDigit())
+        if (predicate(ch))
             word.append(ch)
         else {
             words.add(word.toString())
@@ -27,8 +22,14 @@ fun String.splitWithCharacter(): Pair<List<String>, List<Char>> {
     return words to separators
 }
 
-fun List<CharSequence>.combine(separators: List<Char>): AnnotatedString {
-    return buildAnnotatedString {
+fun <T: Appendable> List<CharSequence>.combine(
+    separators: List<Char>,
+    builder: () -> T = {
+        @Suppress("UNCHECKED_CAST")
+        StringBuilder() as T
+    }
+): T {
+    return builder().apply {
         var p1 = 0
         var p2 = 0
         while (p1 < this@combine.size && p2 < separators.size) {

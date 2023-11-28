@@ -19,7 +19,7 @@ class CodeRunnerRepositoryImpl(
     private val osInformation: OsInformation
 ) : CodeRunnerRepository {
     override fun runCode(code: String) = flow {
-        emit(ProcessOutput.OutputString("Uploading the script. . ."))
+        emit(ProcessOutput.StdOut("Uploading the script. . ."))
         val path = osInformation.getCachePath()
         val file = File(path.toString(), languageSetting.filename)
 
@@ -30,27 +30,27 @@ class CodeRunnerRepositoryImpl(
             file.writeText(code)
             file.deleteOnExit()
         } catch (ioe: IOException) {
-            emit(ProcessOutput.ErrorString("Application faulted while uploading the script: ${ioe.message}"))
-            emit(ProcessOutput.Complete(ExitValue.FAILURE))
+            emit(ProcessOutput.StdErr("Application faulted while uploading the script: ${ioe.message}"))
+            emit(ProcessOutput.Exit(ExitValue.FAILURE))
             return@flow
         }
 
-        emit(ProcessOutput.OutputString("Executing the script. . .\n"))
+        emit(ProcessOutput.StdOut("Executing the script. . .\n"))
         val process: Process
         try {
             process = ProcessBuilder(
                 languageSetting.executionCommand + file.absolutePath
             ).start()
         } catch (ioe: IOException) {
-            emit(ProcessOutput.ErrorString("Application faulted while executing the script: ${ioe.message}"))
-            emit(ProcessOutput.Complete(ExitValue.FAILURE))
+            emit(ProcessOutput.StdErr("Application faulted while executing the script: ${ioe.message}"))
+            emit(ProcessOutput.Exit(ExitValue.FAILURE))
             return@flow
         }
 
         InputStreamReader(process.inputStream).use {
             Scanner(it).use { scanner ->
                 while (scanner.hasNextLine()) {
-                    emit(ProcessOutput.OutputString(scanner.nextLine()))
+                    emit(ProcessOutput.StdOut(scanner.nextLine()))
                 }
             }
         }
@@ -58,7 +58,7 @@ class CodeRunnerRepositoryImpl(
         InputStreamReader(process.errorStream).use {
             Scanner(it).use { scanner ->
                 while (scanner.hasNextLine()) {
-                    emit(ProcessOutput.ErrorString(scanner.nextLine()))
+                    emit(ProcessOutput.StdErr(scanner.nextLine()))
                 }
             }
         }
@@ -66,11 +66,11 @@ class CodeRunnerRepositoryImpl(
         try {
             process.waitFor(30L, TimeUnit.SECONDS);
         } catch (ie: InterruptedException) {
-            emit(ProcessOutput.ErrorString("Script took longer than 30 seconds to execute."))
-            emit(ProcessOutput.Complete(ExitValue.FAILURE))
+            emit(ProcessOutput.StdErr("Script took longer than 30 seconds to execute."))
+            emit(ProcessOutput.Exit(ExitValue.FAILURE))
             return@flow
         }
 
-        emit(ProcessOutput.Complete(process.exitValue()))
+        emit(ProcessOutput.Exit(process.exitValue()))
     }.flowOn(Dispatchers.IO)
 }

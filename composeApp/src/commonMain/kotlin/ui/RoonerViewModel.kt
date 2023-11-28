@@ -11,9 +11,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import data.models.CodeRunnerOutput
 import data.models.ProcessStatus
 import domain.LanguageSetting
-import domain.models.ProcessOutput
 import domain.repositories.CodeRunnerRepository
 import domain.repositories.TimeAnalyticsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -22,16 +22,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.RoonerViewModel.UiEvent.RunCode
 import utils.Constants
 import utils.ExitValue
 import utils.combine
-import utils.splitWithCharacter
+import utils.splitBy
 
 class RoonerViewModel(
-    private val repository: CodeRunnerRepository,
+    private val codeRunnerRepository: CodeRunnerRepository,
     private val languageSetting: LanguageSetting,
     private val timeAnalyticsRepository: TimeAnalyticsRepository
 ) {
@@ -76,7 +77,7 @@ class RoonerViewModel(
                     _output.value = buildAnnotatedString { }
 
                 if (text.text.isBlank()) {
-                    val errStr = ProcessOutput.ErrorString("There is nothing to run!")
+                    val errStr = CodeRunnerOutput.ErrorString("There is nothing to run!")
                     addToOutput(errStr)
                 }
 
@@ -115,12 +116,14 @@ class RoonerViewModel(
 
         startTime = System.currentTimeMillis()
         runJob = CoroutineScope(Dispatchers.Default).launch {
-            repository.runCode(text.text).collect {
-                when (it) {
-                    is ProcessOutput.Complete -> endCode(it.status)
-                    else -> addToOutput(it)
+            codeRunnerRepository.runCode(text.text)
+                .map(CodeRunnerOutput::fromProcessOutput)
+                .collect {
+                    when (it) {
+                        is CodeRunnerOutput.Complete -> endCode(it.status)
+                        else -> addToOutput(it)
+                    }
                 }
-            }
         }
     }
 
@@ -140,13 +143,13 @@ class RoonerViewModel(
         return TextRange(index + event.col - 1, index + event.col)
     }
 
-    private fun addToOutput(output: ProcessOutput) {
-        assert(output !is ProcessOutput.Complete)
+    private fun addToOutput(output: CodeRunnerOutput) {
+        assert(output !is CodeRunnerOutput.Complete)
 
         val transformed = buildAnnotatedString {
             when (output) {
-                is ProcessOutput.OutputString -> appendLine(output.message)
-                is ProcessOutput.ErrorString ->
+                is CodeRunnerOutput.OutputString -> appendLine(output.message)
+                is CodeRunnerOutput.ErrorString ->
                     withStyle(style = SpanStyle(color = Color.Red)) {
                         appendLine(makeClickable(output.message))
                     }
@@ -189,19 +192,19 @@ class RoonerViewModel(
         code: String,
         languageSetting: LanguageSetting
     ): AnnotatedString {
-        val (words, separators) = code.splitWithCharacter()
+        val (words, separators) = code.splitBy()
 
         val annotatedWords = words.map {
             buildAnnotatedString {
                 if (it in languageSetting.keywords)
-                    withStyle(style = SpanStyle(Color.Yellow)) {
+                    withStyle(style = SpanStyle(color = languageSetting.keywords[it]!!)) {
                         append(it)
                     }
                 else append(it)
             }
         }
 
-        return annotatedWords.combine(separators)
+        return annotatedWords.combine(separators) { AnnotatedString.Builder() }.toAnnotatedString()
     }
 
 }

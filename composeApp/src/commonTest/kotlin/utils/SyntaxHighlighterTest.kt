@@ -7,7 +7,7 @@ class SyntaxHighlighterTest {
 
     @Test
     fun splitWithCharacter1() {
-        val (words, separators) = "val".splitWithCharacter()
+        val (words, separators) = "val".splitBy()
 
         assertArrayEquals(arrayOf("val"), words.toTypedArray())
         assertTrue(separators.isEmpty())
@@ -15,7 +15,7 @@ class SyntaxHighlighterTest {
 
     @Test
     fun splitWithCharacter2() {
-        val (words, separators) = "val x".splitWithCharacter()
+        val (words, separators) = "val x".splitBy()
 
         assertArrayEquals(arrayOf("val", "x"), words.toTypedArray())
         assertArrayEquals(arrayOf(' '), separators.toTypedArray())
@@ -23,7 +23,7 @@ class SyntaxHighlighterTest {
 
     @Test
     fun splitWithCharacter3() {
-        val (words, separators) = "val x = 10\nprintln(x)".splitWithCharacter()
+        val (words, separators) = "val x = 10\nprintln(x)".splitBy()
 
         assertArrayEquals(arrayOf(
             "val",
@@ -48,7 +48,7 @@ class SyntaxHighlighterTest {
 
     @Test
     fun splitWithCharacter4() {
-        val (words, separators) = "\nfor (i in 1..10) {\n\tprintln(i)\n}\n\n".splitWithCharacter()
+        val (words, separators) = "\nfor (i in 1..10) {\n\tprintln(i)\n}\n\n".splitBy()
 
         assertArrayEquals(arrayOf(
             "",
@@ -96,32 +96,32 @@ class SyntaxHighlighterTest {
     @Test
     fun combine1() {
         val code = "val"
-        val (words, separators) = code.splitWithCharacter()
+        val (words, separators) = code.splitBy()
 
-        assertEquals(code, words.combine(separators).text)
+        assertEquals(code, words.combine<StringBuilder>(separators).toString())
     }
 
     @Test
     fun combine2() {
         val code = "val x"
-        val (words, separators) = code.splitWithCharacter()
+        val (words, separators) = code.splitBy()
 
-        assertEquals(code, words.combine(separators).text)
+        assertEquals(code, words.combine<StringBuilder>(separators).toString())
     }
 
     @Test
     fun combine3() {
         val code = "val x = 10\nprintln(x)"
-        val (words, separators) = code.splitWithCharacter()
+        val (words, separators) = code.splitBy()
 
-        assertEquals(code, words.combine(separators).text)
+        assertEquals(code, words.combine<StringBuilder>(separators).toString())
     }
 
     @Test
     fun combine4() {
         val code = "\nfor (i in 1..10) {\n\tprintln(i)\n}\n\n"
-        val (words, separators) = code.splitWithCharacter()
+        val (words, separators) = code.splitBy()
 
-        assertEquals(code, words.combine(separators).text)
+        assertEquals(code, words.combine<StringBuilder>(separators).toString())
     }
 }
