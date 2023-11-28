@@ -49,7 +49,7 @@ Go to the project directory
 Start the server
 
 ```bash
-  ./gradlw :composeApp:run
+  ./gradlew :composeApp:run
 ```
 
 ## Roadmap
