@@ -18,7 +18,8 @@ intended for desktop applications.
 
 ## Screenshots and Demo
 
-**_Coming soon!_**
+![](./media/Screenshot.png)
+![](./media/demo.gif)
 
 ## Installation
 
