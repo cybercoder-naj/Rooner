@@ -94,7 +94,6 @@ fun ToolBar(
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            // TODO maybe use a constraint layout instead of hardcoding 32.dp
             Icon(
                 painterResource("running.png"),
                 null,
