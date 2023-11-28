@@ -5,6 +5,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import di.AppContainer
 import ui.screen.EditorPane
 import ui.screen.OutputPane
 import ui.screen.ToolBar
@@ -13,11 +14,24 @@ import ui.screen.ToolBar
 fun App() {
     RoonerTheme {
         Surface(color = MaterialTheme.colors.background) {
+            val viewModel = AppContainer.viewModel
             Column {
-                ToolBar()
+                ToolBar(
+                    runningStatus = viewModel.runningStatus,
+                    autoClear = viewModel.autoClear,
+                    onAction = viewModel::action
+                )
                 Row {
-                    EditorPane()
-                    OutputPane()
+                    EditorPane(
+                        codeText = viewModel.text,
+                        onAction = viewModel::action
+                    )
+                    OutputPane(
+                        runningStatus = viewModel.runningStatus,
+                        output = viewModel.output,
+                        eta = viewModel.eta,
+                        onAction = viewModel::action
+                    )
                 }
             }
         }

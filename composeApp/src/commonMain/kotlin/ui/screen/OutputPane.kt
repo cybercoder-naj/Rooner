@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,12 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import data.models.ProcessStatus
-import di.AppContainer
+import kotlinx.coroutines.flow.StateFlow
 import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.SetCursor
 import ui.components.Pane
@@ -31,14 +31,18 @@ import utils.Constants
 import utils.Icons
 
 @Composable
-fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
-    val output = viewModel.output.collectAsState()
-    val runningStatus = viewModel.runningStatus
+fun OutputPane(
+    runningStatus: ProcessStatus,
+    output: StateFlow<AnnotatedString>,
+    eta: Pair<Long, Long>,
+    onAction: (RoonerViewModel.UiEvent) -> Unit
+) {
+    val outputState = output.collectAsState()
 
     Pane(
         title = "Output",
         modifier = Modifier.fillMaxSize(),
-        auxiliaryInfo = { Indicator(runningStatus, viewModel.eta.first / 1000L + 1) }
+        auxiliaryInfo = { Indicator(runningStatus, eta.first / 1000L + 1) }
     ) {
         Box(
             modifier = Modifier
@@ -48,7 +52,7 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                         return@drawBehind
 
                     val dx =
-                        (viewModel.eta.first.toFloat() / viewModel.eta.second.toFloat()) * size.width
+                        (eta.first.toFloat() / eta.second.toFloat()) * size.width
                     drawLine(
                         color = Color.Green,
                         start = Offset(0f, 0f),
@@ -58,9 +62,9 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                 .padding(start = 12.dp, top = 12.dp)
         ) {
             ClickableText(
-                text = output.value,
+                text = outputState.value,
                 onClick = {
-                    output.value
+                    outputState.value
                         .getStringAnnotations(
                             Constants.SCRIPT_ERROR_LOCATION,
                             it,
@@ -69,9 +73,9 @@ fun OutputPane(viewModel: RoonerViewModel = AppContainer.viewModel) {
                         .firstOrNull()?.let { cursorPosition ->
                             val params = cursorPosition.item.split(":").map(String::toInt)
                             if (params.size == 1)
-                                viewModel.action(SetCursor(params[0], 1))
+                                onAction(SetCursor(params[0], 1))
                             else
-                                viewModel.action(SetCursor(params[0], params[1]))
+                                onAction(SetCursor(params[0], params[1]))
                         }
                 },
                 style = TextStyle(

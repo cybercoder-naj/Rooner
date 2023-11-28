@@ -19,7 +19,7 @@ object AppContainer {
     val timeAnalytics: TimeAnalyticsRepository = TimeAnalyticsRepositoryImpl(logger)
 
     val languageSetting: LanguageSetting = KotlinLanguageSetting()
-    val osInformation: OsInformation = LinuxOsInformation()
+    val osInformation: OsInformation = LinuxOsInformation() // Can use if statements here
 
     val repository: CodeRunnerRepository = CodeRunnerRepositoryImpl(
         languageSetting,

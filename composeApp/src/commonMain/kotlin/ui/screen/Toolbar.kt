@@ -40,8 +40,12 @@ import utils.Icons
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
-    val isProcessRunning = viewModel.runningStatus is ProcessStatus.Active
+fun ToolBar(
+    runningStatus: ProcessStatus,
+    autoClear: Boolean,
+    onAction: (RoonerViewModel.UiEvent) -> Unit
+) {
+    val isProcessRunning = runningStatus is ProcessStatus.Active
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,8 +61,8 @@ fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
-                checked = viewModel.autoClear,
-                onCheckedChange = { viewModel.action(ToggleAutoClear) },
+                checked = autoClear,
+                onCheckedChange = { onAction(ToggleAutoClear) },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color.White
                 )
@@ -82,7 +86,7 @@ fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
             }
 
             IconButton(
-                onClick = { viewModel.action(StopCode) },
+                onClick = { onAction(StopCode) },
             ) {
                 Text(
                     text = Icons.STOP_BUTTON,
@@ -99,7 +103,7 @@ fun ToolBar(viewModel: RoonerViewModel = AppContainer.viewModel) {
             )
         } else {
             IconButton(
-                onClick = { viewModel.action(RunCode) }
+                onClick = { onAction(RunCode) }
             ) {
                 Text(
                     text = Icons.PLAY_BUTTON,
