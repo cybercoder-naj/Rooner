@@ -72,26 +72,6 @@ class RoonerViewModel(
                 text = event.newText.copy(
                     annotatedString = highlight(event.newText.text, languageSetting)
                 )
-                if (text.selection.start == text.selection.end && text.selection.start > 0) {
-                    val insertAt: String.(Int, Char) -> String = {index, char ->
-                        substring(0, index) + char + substring(index)
-                    }
-                    val addClosingBracket: (Char) -> Unit = {
-                        text = event.newText.copy(
-                            annotatedString = highlight(
-                                code = text.text.insertAt(text.selection.start, it),
-                                languageSetting = languageSetting
-                            )
-                        )
-                    }
-
-                    when(text.text[text.selection.start - 1]) {
-                        '(' -> addClosingBracket(')')
-                        '{' -> addClosingBracket('}')
-                        '[' -> addClosingBracket(']')
-                        else -> Unit
-                    }
-                }
             }
 
             RunCode -> {
