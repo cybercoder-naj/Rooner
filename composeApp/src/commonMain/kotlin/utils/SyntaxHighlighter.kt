@@ -22,7 +22,7 @@ fun String.splitBy(
     return words to separators
 }
 
-fun <T: Appendable> List<CharSequence>.combine(
+fun <T : Appendable> List<CharSequence>.combine(
     separators: List<Char>,
     builder: () -> T = {
         @Suppress("UNCHECKED_CAST")

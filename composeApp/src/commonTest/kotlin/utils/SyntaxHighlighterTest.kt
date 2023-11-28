@@ -1,7 +1,9 @@
 package utils
 
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import org.junit.Assert.*
 
 class SyntaxHighlighterTest {
 
@@ -25,72 +27,80 @@ class SyntaxHighlighterTest {
     fun splitWithCharacter3() {
         val (words, separators) = "val x = 10\nprintln(x)".splitBy()
 
-        assertArrayEquals(arrayOf(
-            "val",
-            "x",
-            "",
-            "",
-            "10",
-            "println",
-            "x"
-        ), words.toTypedArray())
+        assertArrayEquals(
+            arrayOf(
+                "val",
+                "x",
+                "",
+                "",
+                "10",
+                "println",
+                "x"
+            ), words.toTypedArray()
+        )
 
-        assertArrayEquals(arrayOf(
-            ' ',
-            ' ',
-            '=',
-            ' ',
-            '\n',
-            '(',
-            ')'
-        ), separators.toTypedArray())
+        assertArrayEquals(
+            arrayOf(
+                ' ',
+                ' ',
+                '=',
+                ' ',
+                '\n',
+                '(',
+                ')'
+            ), separators.toTypedArray()
+        )
     }
 
     @Test
     fun splitWithCharacter4() {
         val (words, separators) = "\nfor (i in 1..10) {\n\tprintln(i)\n}\n\n".splitBy()
 
-        assertArrayEquals(arrayOf(
-            "",
-            "for",
-            "",
-            "i",
-            "in",
-            "1",
-            "",
-            "10",
-            "",
-            "",
-            "",
-            "",
-            "println",
-            "i",
-            "",
-            "",
-            "",
-            ""
-        ), words.toTypedArray())
+        assertArrayEquals(
+            arrayOf(
+                "",
+                "for",
+                "",
+                "i",
+                "in",
+                "1",
+                "",
+                "10",
+                "",
+                "",
+                "",
+                "",
+                "println",
+                "i",
+                "",
+                "",
+                "",
+                ""
+            ), words.toTypedArray()
+        )
 
-        assertArrayEquals(arrayOf(
-            '\n',
-            ' ',
-            '(',
-            ' ',
-            ' ',
-            '.',
-            '.',
-            ')',
-            ' ',
-            '{',
-            '\n',
-            '\t',
-            '(',
-            ')',
-            '\n',
-            '}',
-            '\n',
-            '\n'
-        ), separators.toTypedArray())
+        assertArrayEquals(
+            arrayOf(
+                '\n',
+                ' ',
+                '(',
+                ' ',
+                ' ',
+                '.',
+                '.',
+                ')',
+                ' ',
+                '{',
+                '\n',
+                '\t',
+                '(',
+                ')',
+                '\n',
+                '}',
+                '\n',
+                '\n'
+            ), separators.toTypedArray()
+        )
     }
 
     @Test
