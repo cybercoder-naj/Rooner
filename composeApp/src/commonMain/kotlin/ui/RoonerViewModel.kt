@@ -10,6 +10,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.text.withStyle
 import data.models.CodeRunnerOutput
 import data.models.ProcessStatus
@@ -30,6 +31,7 @@ import utils.Constants
 import utils.ExitValue
 import utils.combine
 import utils.splitBy
+
 
 class RoonerViewModel(
     private val codeRunnerRepository: CodeRunnerRepository,
@@ -70,6 +72,26 @@ class RoonerViewModel(
                 text = event.newText.copy(
                     annotatedString = highlight(event.newText.text, languageSetting)
                 )
+                if (text.selection.start == text.selection.end) {
+                    val insertAt: String.(Int, Char) -> String = {index, char ->
+                        substring(0, index) + char + substring(index)
+                    }
+                    val addClosingBracket: (Char) -> Unit = {
+                        text = event.newText.copy(
+                            annotatedString = highlight(
+                                code = text.text.insertAt(text.selection.start, it),
+                                languageSetting = languageSetting
+                            )
+                        )
+                    }
+
+                    when(text.text[text.selection.start - 1]) {
+                        '(' -> addClosingBracket(')')
+                        '{' -> addClosingBracket('}')
+                        '[' -> addClosingBracket(']')
+                        else -> Unit
+                    }
+                }
             }
 
             RunCode -> {
@@ -109,8 +131,8 @@ class RoonerViewModel(
 
         timeJob = CoroutineScope(Dispatchers.Default).launch {
             while (eta.first > 0) {
-                delay(1000L)
-                eta = eta.copy(first = eta.first - 1000L)
+                delay(Constants.ETA_DELAY_TIME)
+                eta = eta.copy(first = eta.first - Constants.ETA_DELAY_TIME)
             }
         }
 

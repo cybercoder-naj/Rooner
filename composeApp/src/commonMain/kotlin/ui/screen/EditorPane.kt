@@ -26,15 +26,13 @@ import androidx.compose.ui.unit.sp
 import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.EditCode
 import ui.components.Pane
+import utils.Constants
 
 @Composable
 fun EditorPane(
     codeText: TextFieldValue,
     onAction: (RoonerViewModel.UiEvent) -> Unit
 ) {
-    val editorFontSize = 16.sp
-    val editorLineHeight = 1.em
-    val editorPaddingTop = 12.dp
     val selectionColours = TextSelectionColors(
         handleColor = Color.Blue,
         backgroundColor = Color.Blue
@@ -49,7 +47,7 @@ fun EditorPane(
         Row(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = editorPaddingTop)
+                .padding(top = Constants.PADDING_TOP)
         ) {
             Column(
                 modifier = Modifier
@@ -61,8 +59,8 @@ fun EditorPane(
                     Text(
                         text = "${i + 1}",
                         fontFamily = FontFamily.Monospace,
-                        fontSize = editorFontSize,
-                        lineHeight = editorLineHeight,
+                        fontSize = Constants.FONT_SIZE,
+                        lineHeight = Constants.LINE_HEIGHT,
                         color = Color.LightGray
                     )
                 }
@@ -79,8 +77,8 @@ fun EditorPane(
                     textStyle = TextStyle(
                         fontFamily = FontFamily.Monospace,
                         color = MaterialTheme.colors.onBackground,
-                        fontSize = editorFontSize,
-                        lineHeight = editorLineHeight
+                        fontSize = Constants.FONT_SIZE,
+                        lineHeight = Constants.LINE_HEIGHT
                     ),
                     cursorBrush = Brush.linearGradient(listOf(Color.White, Color.White))
                 )

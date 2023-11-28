@@ -46,6 +46,6 @@ class KotlinLanguageSetting : LanguageSetting {
             "var",
             "when",
             "while"
-        ).associateWith { Color(0xFFFFF800) }
+        ).associateWith { Color.Yellow }
 
 }

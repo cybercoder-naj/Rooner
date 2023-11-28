@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -59,7 +60,7 @@ fun OutputPane(
                         end = Offset(dx, 0f)
                     )
                 }
-                .padding(start = 12.dp, top = 12.dp)
+                .padding(start = 12.dp, top = Constants.PADDING_TOP)
         ) {
             ClickableText(
                 text = outputState.value,
@@ -81,7 +82,7 @@ fun OutputPane(
                 style = TextStyle(
                     color = Color.White,
                     fontFamily = FontFamily.Monospace,
-                    fontSize = 16.sp
+                    fontSize = Constants.FONT_SIZE
                 ),
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
@@ -98,7 +99,7 @@ fun Indicator(runningStatus: ProcessStatus, eta: Long) {
         when (runningStatus) {
             ProcessStatus.Active -> {
                 Text(
-                    text = "\uf111",
+                    text = Icons.CDOT,
                     color = Color.Yellow
                 )
                 Spacer(Modifier.width(4.dp))
