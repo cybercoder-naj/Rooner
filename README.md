@@ -65,6 +65,7 @@ Start the server
 ## Known Issues
 
  - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
+ - On MacOS, some icons may not be displayed.
 
 ## Navigating the project
 
