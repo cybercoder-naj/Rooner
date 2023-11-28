@@ -136,7 +136,7 @@ class RoonerViewModel(
         timeJob = CoroutineScope(Dispatchers.Default).launch {
             while (eta.first > 0) {
                 delay(Constants.ETA_DELAY_TIME)
-                eta = eta.copy(first = eta.first - Constants.ETA_DELAY_TIME)
+                eta = eta.copy(first = maxOf(eta.first - Constants.ETA_DELAY_TIME, 0L))
             }
         }
 
