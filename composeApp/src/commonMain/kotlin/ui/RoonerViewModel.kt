@@ -72,7 +72,7 @@ class RoonerViewModel(
                 text = event.newText.copy(
                     annotatedString = highlight(event.newText.text, languageSetting)
                 )
-                if (text.selection.start == text.selection.end) {
+                if (text.selection.start == text.selection.end && text.selection.start > 0) {
                     val insertAt: String.(Int, Char) -> String = {index, char ->
                         substring(0, index) + char + substring(index)
                     }
