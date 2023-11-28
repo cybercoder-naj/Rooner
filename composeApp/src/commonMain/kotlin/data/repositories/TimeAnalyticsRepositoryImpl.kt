@@ -18,22 +18,21 @@ class TimeAnalyticsRepositoryImpl(
     }
 
     override fun getETA(): Long {
+        if (times.isEmpty())
+            return 0L
+
         var n: Int
         var decayRate: Double
-        var nfactor: Long
         return times
             .takeLast(NUM_TIMES)
             .also {
-                nfactor = it.last()
                 n = it.size
-                decayRate = 1.0 / n
+                decayRate = 1.0 / (n * (n + 1) / 2)
             }
-            .map { it.toDouble() / nfactor }
             .mapIndexed { index, nTime ->
                 nTime * decayRate * (index + 1) // decayRate * (lastIndex + 1) = 1.0
             }
             .fold(0.0, Double::plus)
-            .let { it / n * nfactor}
             .also { logger.log("Calculated ETA: $it ms") }
             .toLong()
     }

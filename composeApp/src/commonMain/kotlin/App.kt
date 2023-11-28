@@ -10,6 +10,9 @@ import ui.screen.EditorPane
 import ui.screen.OutputPane
 import ui.screen.ToolBar
 
+/**
+ * This is the starting point of the application
+ */
 @Composable
 fun App() {
     RoonerTheme {

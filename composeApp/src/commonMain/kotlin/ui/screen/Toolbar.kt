@@ -36,7 +36,6 @@ import ui.RoonerViewModel
 import ui.RoonerViewModel.UiEvent.*
 import utils.Icons
 
-
 @OptIn(ExperimentalResourceApi::class)
 @Composable
 fun ToolBar(

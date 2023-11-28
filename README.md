@@ -65,7 +65,6 @@ Start the server
 ## Known Issues
 
  - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
- - ETA time does not give accurate results.
 
 ## Navigating the project
 

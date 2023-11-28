@@ -10,7 +10,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.text.withStyle
 import data.models.CodeRunnerOutput
 import data.models.ProcessStatus
@@ -32,25 +31,44 @@ import utils.ExitValue
 import utils.combine
 import utils.splitBy
 
-
+/**
+ * This is the model that contains the client side logic for the application
+ */
 class RoonerViewModel(
     private val codeRunnerRepository: CodeRunnerRepository,
     private val languageSetting: LanguageSetting,
     private val timeAnalyticsRepository: TimeAnalyticsRepository
 ) {
+    /**
+     * The code written in the editor pane
+     */
     var text by mutableStateOf(TextFieldValue())
         private set
 
+    /**
+     * Inactive initially, either Active or Done.
+     */
     var runningStatus by mutableStateOf<ProcessStatus>(ProcessStatus.Inactive)
         private set
 
+    /**
+     * If true, the output pane will clear on pressing run
+     */
     var autoClear by mutableStateOf(false)
         private set
 
+    /**
+     * A pair of a mutable number to an immutable number.
+     * The second component contains the actual eta.
+     * The first component contains the ETA elapsed.
+     */
     var eta by mutableStateOf(0L to 0L)
         private set
 
     private val _output = MutableStateFlow(buildAnnotatedString { })
+    /**
+     * A stateflow of the output collected by the Output pane
+     */
     val output: StateFlow<AnnotatedString>
         get() = _output
 
@@ -58,6 +76,9 @@ class RoonerViewModel(
     private var timeJob: Job? = null
     private var startTime = 0L
 
+    /**
+     * Defining the events the UI can invoke the ViewModel
+     */
     sealed class UiEvent {
         data class EditCode(val newText: TextFieldValue) : UiEvent()
         data object RunCode : UiEvent()
@@ -66,6 +87,9 @@ class RoonerViewModel(
         data class SetCursor(val row: Int, val col: Int) : UiEvent()
     }
 
+    /**
+     * Event Handler function for all UiEvents
+     */
     fun action(event: UiEvent) {
         when (event) {
             is EditCode -> {

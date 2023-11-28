@@ -1,5 +1,11 @@
 package utils
 
+/**
+ * Given a predicate, this function will return two lists.
+ * The first is a list of strings, separated by the delimiter.
+ * The second is a list of characters, the character that were used
+ * to separate the strings.
+ */
 fun String.splitBy(
     predicate: (Char) -> Boolean = Char::isLetterOrDigit
 ): Pair<List<String>, List<Char>> {
@@ -22,6 +28,12 @@ fun String.splitBy(
     return words to separators
 }
 
+/**
+ * This is the inverse of splitBy.
+ *
+ * val (words, separators) = str.splitBy()
+ * assert(str == words.combine(separators).toString())
+ */
 fun <T : Appendable> List<CharSequence>.combine(
     separators: List<Char>,
     builder: () -> T = {
