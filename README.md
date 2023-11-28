@@ -19,7 +19,6 @@ intended for desktop applications.
 ## Screenshots and Demo
 
 ![](./media/Screenshot.png)
-![](./media/demo.gif)
 
 ## Installation
 
