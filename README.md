@@ -18,13 +18,15 @@ intended for desktop applications.
 
 ## Screenshots and Demo
 
+View the demo on [YouTube](https://youtu.be/UO4yG8t8FH4)
+
 ![](./media/Screenshot.png)
 
 ## Installation
 
 ### Prerequisites
 
-You need to have the following installed
+You must have the following installed
 
  1. [Android Studio](https://developer.android.com/studio/install) ~> IDE for code editing
  2. [Kotlin Compiler](https://kotlinlang.org/docs/command-line.html#sdkman) ~> Tool required by Rooner
@@ -64,12 +66,12 @@ Start the server
 
 ## Known Issues
 
- - Entering tab on the editor makes rectangular boxes. Advised to use spaces instead.
+ - Entering the tab key on the editor makes rectangular boxes. Advised to use spaces instead.
  - On MacOS, some icons may not be displayed.
 
 ## Navigating the project
 
-All of my code for this project is under [composeApp/src/commonMain/kotlin](composeApp/src/commonMain/kotlin).
+My code for this project is under [composeApp/src/commonMain/kotlin](composeApp/src/commonMain/kotlin).
  - `App.kt` - this contains the parent composable called from `composeApp/src/desktopMain`.
  - `data/` - contains concrete implementations of the domain layer.
  - `di/` - A basic dependency injection singleton module.
