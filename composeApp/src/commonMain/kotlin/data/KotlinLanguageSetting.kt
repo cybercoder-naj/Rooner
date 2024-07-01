@@ -14,6 +14,7 @@ class KotlinLanguageSetting : LanguageSetting {
     override val baseCommand: String
         get() = "kotlinc"
     override val executionCommand: List<String>
+        // Improvement: Use a list rather than splitting text.
         get() = "$baseCommand -script".split(" ")
     override val keywords: Map<String, Color>
         get() = listOf(

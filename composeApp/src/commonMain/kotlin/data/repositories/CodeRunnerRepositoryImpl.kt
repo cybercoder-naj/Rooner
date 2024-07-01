@@ -14,6 +14,7 @@ import java.io.InputStreamReader
 import java.util.Scanner
 import java.util.concurrent.TimeUnit
 
+// Improvement: Add docs to the interface
 class CodeRunnerRepositoryImpl(
     private val languageSetting: LanguageSetting,
     private val osInformation: OsInformation
@@ -47,6 +48,7 @@ class CodeRunnerRepositoryImpl(
             return@flow
         }
 
+        // Improvement: Maybe reduce code duplication with a private inline function
         InputStreamReader(process.inputStream).use {
             Scanner(it).use { scanner ->
                 while (scanner.hasNextLine()) {
@@ -64,7 +66,7 @@ class CodeRunnerRepositoryImpl(
         }
 
         try {
-            process.waitFor(30L, TimeUnit.SECONDS);
+            process.waitFor(30L, TimeUnit.SECONDS); // Use constant instead
         } catch (ie: InterruptedException) {
             emit(ProcessOutput.StdErr("Script took longer than 30 seconds to execute."))
             emit(ProcessOutput.Exit(ExitValue.FAILURE))

@@ -51,6 +51,7 @@ fun ToolBar(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Improvement: this into a separate file
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
@@ -75,7 +76,7 @@ fun ToolBar(
                     targetValue = 360f,
                     animationSpec = infiniteRepeatable(
                         animation = tween(
-                            durationMillis = 1000,
+                            durationMillis = 1000, // Improvement: use a Constant instead
                             easing = LinearEasing
                         ),
                         repeatMode = RepeatMode.Restart

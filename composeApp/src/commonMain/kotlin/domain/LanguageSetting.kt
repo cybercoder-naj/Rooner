@@ -2,6 +2,7 @@ package domain
 
 import androidx.compose.ui.graphics.Color
 
+// Improvement: Add documentation, although fairly simple
 interface LanguageSetting {
     val name: String
     val fileExtension: String

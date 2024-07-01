@@ -43,6 +43,7 @@ fun OutputPane(
     Pane(
         title = "Output",
         modifier = Modifier.fillMaxSize(),
+        // Improvement: outsource the rounding logic
         auxiliaryInfo = { Indicator(runningStatus, eta.first / 1000L + 1) }
     ) {
         Box(
@@ -72,6 +73,8 @@ fun OutputPane(
                             it
                         )
                         .firstOrNull()?.let { cursorPosition ->
+                            // Improvement: Create an encoder/decoder class to put this logic
+                            // in the same place
                             val params = cursorPosition.item.split(":").map(String::toInt)
                             if (params.size == 1)
                                 onAction(SetCursor(params[0], 1))
@@ -81,7 +84,7 @@ fun OutputPane(
                 },
                 style = TextStyle(
                     color = Color.White,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = FontFamily.Monospace, // Improvements: use settings
                     fontSize = Constants.FONT_SIZE
                 ),
                 modifier = Modifier

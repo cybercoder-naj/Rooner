@@ -58,7 +58,7 @@ fun EditorPane(
                 for (i in codeText.text.lines().indices) {
                     Text(
                         text = "${i + 1}",
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = FontFamily.Monospace, // Improvement: introduce settings
                         fontSize = Constants.FONT_SIZE,
                         lineHeight = Constants.LINE_HEIGHT,
                         color = Color.LightGray

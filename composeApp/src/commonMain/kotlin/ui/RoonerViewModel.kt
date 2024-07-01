@@ -46,7 +46,7 @@ class RoonerViewModel(
         private set
 
     /**
-     * Inactive initially, either Active or Done.
+     * Inactive initially, then it is either Active or Done.
      */
     var runningStatus by mutableStateOf<ProcessStatus>(ProcessStatus.Inactive)
         private set
@@ -62,6 +62,7 @@ class RoonerViewModel(
      * The second component contains the actual eta.
      * The first component contains the ETA elapsed.
      */
+    // Does not seem immediately obvious. Maybe there is a better way?
     var eta by mutableStateOf(0L to 0L)
         private set
 
@@ -131,7 +132,7 @@ class RoonerViewModel(
     private fun startCode() {
         val newEta = timeAnalyticsRepository.getETA()
         runningStatus = ProcessStatus.Active
-        eta = newEta to newEta
+        eta = newEta to newEta // Improvement: reason why using pair wasn't the greatest idea
 
         timeJob = CoroutineScope(Dispatchers.Default).launch {
             while (eta.first > 0) {
@@ -163,6 +164,8 @@ class RoonerViewModel(
 
     private fun getSelection(event: UiEvent.SetCursor): TextRange {
         val lines = text.text.lines()
+        // Improvement: the math is used because of how the file sees line numbers and how
+        // TextRange requires the numbers. A clear english description could have been better.
         var index = 0
         for (i in 0..<(event.row - 1))
             index += lines[i].length + 1
@@ -193,6 +196,8 @@ class RoonerViewModel(
             ?: return buildAnnotatedString { append(string) }
 
         return buildAnnotatedString {
+            // Improvement: match.groupValues[0] was used alot and does not convey what it holds
+            // Should create a new variable name.
             append(string.substringBefore(match.groupValues[0]))
             withStyle(
                 style = SpanStyle(
@@ -214,10 +219,16 @@ class RoonerViewModel(
         }
     }
 
+    // This function was earlier not part of this class.
+    // When I shifted this here, I forgot to remove the languageSetting parameter.
+    // LanguageSetting is already a dependency of the ViewModel
     private fun highlight(
         code: String,
         languageSetting: LanguageSetting
     ): AnnotatedString {
+        // After learning a bit more about syntax highlighting,
+        // this could have better solved using Regex patterns.
+        // This method is not extensible for extending more features.
         val (words, separators) = code.splitBy()
 
         val annotatedWords = words.map {
